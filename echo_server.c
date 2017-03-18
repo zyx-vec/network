@@ -133,8 +133,8 @@ int main() {
 		if((fork()) == 0) {
 			close(listenfd);
 
-			// if((echo(connfd)) != 0) {
-			if((add(connfd)) != 0) {
+			if((echo(connfd)) != 0) {
+			//if((add(connfd)) != 0) {
 				fprintf(stderr, "%s\n", "echo() error");
 				exit(1);
 			}

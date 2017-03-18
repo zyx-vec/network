@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <stdio.h>
 
 #include "io.h"
 
@@ -73,4 +74,23 @@ ssize_t readline(int fd, void* buff, int maxlen) {
 
 	*p = '\0';
 	return n;
+}
+
+ssize_t Read(int fd, void *ptr, size_t nbytes)
+{
+	ssize_t		n;
+
+	if ( (n = read(fd, ptr, nbytes)) == -1) {
+		fprintf(stderr, "%s\n", "read() error");
+		exit(1);
+	}
+	return(n);
+}
+
+void Write(int fd, void *ptr, size_t nbytes)
+{
+	if (write(fd, ptr, nbytes) != nbytes) {
+		fprintf(stderr, "%s\n", "write() error");
+		exit(1);
+	}
 }

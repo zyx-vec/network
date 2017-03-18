@@ -2,10 +2,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+
+#include <sys/select.h>
+#include <sys/time.h>
 
 #include "common.h"
 #include "io.h"
@@ -40,10 +44,110 @@ void doit(FILE* fp, int fd) {
 
 		if((readline(fd, recvline, MAXLINE)) == 0) {
 			fprintf(stderr, "%s\n", "doit() server terminated prematurely");
+			return;
 		}
 		fputs(recvline, stdout);
 	}
 }
+
+void doit_select(FILE* fp, int fd) {
+	int maxfdp1, stdineof, n;
+	fd_set rset;
+
+	char buff[MAXLINE];
+
+	stdineof = 0;
+	FD_ZERO(&rset);
+	for(;;) {
+		if(stdineof == 0)
+			FD_SET(fileno(fp), &rset);
+		FD_SET(fd, &rset);
+		maxfdp1 = max(fileno(fp), fd) + 1;
+
+		if((select(maxfdp1, &rset, NULL, NULL, NULL)) < 0) {
+			if(errno == EINTR) {
+				continue;
+			} else {
+				fprintf(stderr, "%s\n", "select() error");
+				exit(1);
+			}
+		}
+
+		if(FD_ISSET(fd, &rset)) {	// socket is readable
+			if((n = Read(fd, buff, MAXLINE)) == 0) {	// server closed.
+				if(stdineof == 1) {
+					return;	// normal termination
+				} else {
+					fprintf(stderr, "%s\n", "server terminated prematurely");
+					return;
+				}
+			}
+			Write(fileno(stdout), buff, n);
+		}
+
+		if(FD_ISSET(fileno(fp), &rset)) {	// input is readable
+			if((n = Read(fileno(fp), buff, MAXLINE)) == 0) {	// EOF
+				stdineof = 1;
+				if((shutdown(fd, SHUT_WR)) < 0) {
+					fprintf(stderr, "%s\n", "shutdown() error");
+					return;
+				}
+				FD_CLR(fileno(fp), &rset);
+				continue;
+			}
+			// no null-terminator here, wtf, don't use strlen on network processed buff.
+			if((writen(fd, buff, n)) != n) {
+				fprintf(stderr, "%s\n", "writen() error");
+				return;
+			}
+		}
+	}
+}
+
+// wait and stop mode.
+#if 0
+void doit_select1(FILE* fp, int fd) {
+	int maxfdp1;
+	fd_set rset;
+
+	char sendline[MAXLINE], recvline[MAXLINE];
+
+	FD_ZERO(&rset);
+	for(;;) {
+		FD_SET(fileno(fp), &rset);
+		FD_SET(fd, &rset);
+		maxfdp1 = max(fileno(fp), fd) + 1;
+
+		if((select(maxfdp1, &rset, NULL, NULL, NULL)) < 0) {
+			if(errno == EINTR) {
+				continue;
+			} else {
+				fprintf(stderr, "%s\n", "select() error");
+				exit(1);
+			}
+		}
+
+		if(FD_ISSET(fd, &rset)) {	// socket is readable
+			if(readline(fd, recvline, MAXLINE) == 0) {	// server closed
+				fprintf(stderr, "%s\n", "server terminated prematurely");
+				return;
+			}
+			fputs(recvline, stdout);
+		}
+
+		if(FD_ISSET(fileno(fp), &rset)) {	// input is readable
+			if(fgets(sendline, MAXLINE, fp) == NULL) {
+				return;	// EOF
+			}
+			if((writen(fd, sendline, strlen(sendline))) < 0) {
+				fprintf(stderr, "%s\n", "writen() error");
+				return;
+			}
+		}
+	}
+}
+
+#endif
 
 #if 0
 
@@ -122,8 +226,8 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	doit(stdin, clientfd);
-
+	// doit(stdin, clientfd);
+	doit_select(stdin, clientfd);
 	return 0;
 }
 #endif

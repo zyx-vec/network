@@ -8,4 +8,8 @@ ssize_t writen(int fd, const void* buff, size_t n);
 
 ssize_t readline(int fd, void* buff, int maxlen);
 
+ssize_t Read(int fd, void *ptr, size_t nbytes);
+
+void Write(int fd, void *ptr, size_t nbytes);
+
 #endif
