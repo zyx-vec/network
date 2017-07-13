@@ -9,9 +9,28 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#include <semaphore.h>
+
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+#include <time.h>
+
 #include "common.h"
 #include "io.h"
 #include "dsignal.h"
+
+
+#define SEM_PATH "./log/sem_http_log"
+
+#define LOG_PATH "./log/log.txt" 
+
+char* content = "HTTP/1.0 200 OK\r\n\
+Content-type: text/plain\r\n\
+Content-length: 19\r\n\r\n\
+Hi! I\'m a message!";
+
 
 void sig_chld(int signo) {
 	pid_t pid;
@@ -35,12 +54,40 @@ void sig_chld(int signo) {
 	// it, when it happends. see below calls to accept().
 }
 
-char* content = "HTTP/1.0 200 OK\r\n\
-Content-type: text/plain\r\n\
-Content-length: 19\r\n\r\n\
-Hi! I\'m a message!";
+int write_log(struct sockaddr_in* addr) {
+    time_t cur_time;
+    char log_buff[64];
+    char* ptr = log_buff;
+    struct tm* cur_tm;
+    memset(log_buff, 0, sizeof(log_buff));
+    char* ip = inet_ntoa(addr->sin_addr);
+    
+    sem_t* sem_id = sem_open(SEM_PATH, O_CREAT, S_IRUSR | S_IWUSR, 1);
+    sem_wait(sem_id);
 
-int echo(int fd) {
+    // must specify the third parameter: mode, because O_CREAT is here.
+    int fd = open(LOG_PATH, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        fprintf(stderr, "open log file failed, in file %s, line %d\n", __FILE__, __LINE__);
+        return -1;
+    }
+    cur_time = time(NULL);
+    cur_tm = localtime(&cur_time);
+    strftime(log_buff, sizeof(log_buff)-1, "%F %T, client's ip: ", cur_tm);
+    ptr = strcat(ptr, ip);
+    printf("log: %s\n", ptr);
+
+    write(fd, ptr, strlen(ptr));
+    write(fd, "\r\n", 2);
+
+    sem_post(sem_id);
+    sem_close(sem_id);
+    sem_unlink(SEM_PATH);
+    close(fd);
+    return 0;
+}
+
+int echo(int fd, struct sockaddr_in* addr) {
 
 	char buff[MAXLINE];
 	size_t n;
@@ -57,7 +104,9 @@ int echo(int fd) {
         buff[n] = '\0';
         printf("%s", buff);
         if (!strcmp(buff, "\r\n")) {
-            printf("Response: %s\n", content);
+            if (write_log(addr) < 0)
+                return -1;
+            printf("Response:\n%s\n", content);
             int response_length = strlen(content);
 
 	        if((writen(fd, content, response_length)) < 0) {
@@ -146,7 +195,7 @@ int main() {
 		if((fork()) == 0) {
 			close(listenfd);
 
-			if((echo(connfd)) != 0) {
+			if((echo(connfd, &client)) != 0) {
 			//if((add(connfd)) != 0) {
 				fprintf(stderr, "%s\n", "echo() error");
 				exit(1);
