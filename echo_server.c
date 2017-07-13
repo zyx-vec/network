@@ -35,6 +35,11 @@ void sig_chld(int signo) {
 	// it, when it happends. see below calls to accept().
 }
 
+char* content = "HTTP/1.0 200 OK\r\n\
+Content-type: text/plain\r\n\
+Content-length: 19\r\n\r\n\
+Hi! I\'m a message!";
+
 int echo(int fd) {
 
 	char buff[MAXLINE];
@@ -49,10 +54,18 @@ int echo(int fd) {
 			return 0;
 		}
 
-		if((writen(fd, buff, n)) < 0) {
-			fprintf(stderr, "%s\n", "writen() error");
-			return -1;
-		}
+        buff[n] = '\0';
+        printf("%s", buff);
+        if (!strcmp(buff, "\r\n")) {
+            printf("Response: %s\n", content);
+            int response_length = strlen(content);
+
+	        if((writen(fd, content, response_length)) < 0) {
+	        	fprintf(stderr, "%s\n", "writen() error");
+	        	return -1;
+	        }
+            break;
+        }
 	}
 
 	return 0;

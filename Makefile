@@ -9,7 +9,7 @@ client : client.o addr_converter.o
 	$(CC) -o client client.o addr_converter.o
 
 echo_server : echo_server.o io.o dsignal.o
-	$(CC) -o echo_server echo_server.o io.o dsignal.o
+	$(CC) -o echo_server echo_server.o io.o dsignal.o -g
 
 echo_client : echo_client.o io.o dsignal.o
 	$(CC) -o echo_client echo_client.o io.o dsignal.o
