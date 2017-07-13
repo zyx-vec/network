@@ -104,51 +104,6 @@ void doit_select(FILE* fp, int fd) {
 	}
 }
 
-// wait and stop mode.
-#if 0
-void doit_select1(FILE* fp, int fd) {
-	int maxfdp1;
-	fd_set rset;
-
-	char sendline[MAXLINE], recvline[MAXLINE];
-
-	FD_ZERO(&rset);
-	for(;;) {
-		FD_SET(fileno(fp), &rset);
-		FD_SET(fd, &rset);
-		maxfdp1 = max(fileno(fp), fd) + 1;
-
-		if((select(maxfdp1, &rset, NULL, NULL, NULL)) < 0) {
-			if(errno == EINTR) {
-				continue;
-			} else {
-				fprintf(stderr, "%s\n", "select() error");
-				exit(1);
-			}
-		}
-
-		if(FD_ISSET(fd, &rset)) {	// socket is readable
-			if(readline(fd, recvline, MAXLINE) == 0) {	// server closed
-				fprintf(stderr, "%s\n", "server terminated prematurely");
-				return;
-			}
-			fputs(recvline, stdout);
-		}
-
-		if(FD_ISSET(fileno(fp), &rset)) {	// input is readable
-			if(fgets(sendline, MAXLINE, fp) == NULL) {
-				return;	// EOF
-			}
-			if((writen(fd, sendline, strlen(sendline))) < 0) {
-				fprintf(stderr, "%s\n", "writen() error");
-				return;
-			}
-		}
-	}
-}
-
-#endif
-
 #if 0
 
 int main(int argc, char** argv) {
@@ -230,4 +185,53 @@ int main(int argc, char** argv) {
 	doit_select(stdin, clientfd);
 	return 0;
 }
+#endif
+
+
+
+
+
+// wait and stop mode.
+#if 0
+void doit_select1(FILE* fp, int fd) {
+	int maxfdp1;
+	fd_set rset;
+
+	char sendline[MAXLINE], recvline[MAXLINE];
+
+	FD_ZERO(&rset);
+	for(;;) {
+		FD_SET(fileno(fp), &rset);
+		FD_SET(fd, &rset);
+		maxfdp1 = max(fileno(fp), fd) + 1;
+
+		if((select(maxfdp1, &rset, NULL, NULL, NULL)) < 0) {
+			if(errno == EINTR) {
+				continue;
+			} else {
+				fprintf(stderr, "%s\n", "select() error");
+				exit(1);
+			}
+		}
+
+		if(FD_ISSET(fd, &rset)) {	// socket is readable
+			if(readline(fd, recvline, MAXLINE) == 0) {	// server closed
+				fprintf(stderr, "%s\n", "server terminated prematurely");
+				return;
+			}
+			fputs(recvline, stdout);
+		}
+
+		if(FD_ISSET(fileno(fp), &rset)) {	// input is readable
+			if(fgets(sendline, MAXLINE, fp) == NULL) {
+				return;	// EOF
+			}
+			if((writen(fd, sendline, strlen(sendline))) < 0) {
+				fprintf(stderr, "%s\n", "writen() error");
+				return;
+			}
+		}
+	}
+}
+
 #endif
