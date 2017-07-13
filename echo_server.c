@@ -87,37 +87,23 @@ int write_log(struct sockaddr_in* addr) {
     return 0;
 }
 
-int echo(int fd, struct sockaddr_in* addr) {
+int http_serve(int fd, struct sockaddr_in* addr) {
 
-	char buff[MAXLINE];
+	char buff[MAXHEAD];
 	size_t n;
 
-	for(;;) {
-		if((n = readline(fd, buff, MAXLINE)) < 0) {
-			fprintf(stderr, "%s\n", "readline() error");
-			return -1;
-		}
-		else if(n == 0) {	// client close it.
-			return 0;
-		}
+    n = get_http_request(fd, buff, MAXLINE);
+    printf("%s", buff);
+    if (n < 2 || (write_log(addr) < 0)) {
+        return -1;
+    }
+    int response_length = strlen(content);
+    if((writen(fd, content, response_length)) < 0) {
+        fprintf(stderr, "writen() error, file: %s, line: %d\n", __FILE__, __LINE__);
+        return -1;
+    }
 
-        buff[n] = '\0';
-        printf("%s", buff);
-        if (!strcmp(buff, "\r\n")) {
-            if (write_log(addr) < 0)
-                return -1;
-            printf("Response:\n%s\n", content);
-            int response_length = strlen(content);
-
-	        if((writen(fd, content, response_length)) < 0) {
-	        	fprintf(stderr, "%s\n", "writen() error");
-	        	return -1;
-	        }
-            break;
-        }
-	}
-
-	return 0;
+    return 0;
 }
 
 int add(int fd) {
@@ -187,7 +173,7 @@ int main() {
 			if(errno == EINTR) {
 				continue;
 			} else {
-				fprintf(stderr, "%s\n", "accept() error");
+				fprintf(stderr, "accept() error, file: %s, line: %d\n", __FILE__, __LINE__);
 				exit(1);
 			}
 		}
@@ -195,9 +181,9 @@ int main() {
 		if((fork()) == 0) {
 			close(listenfd);
 
-			if((echo(connfd, &client)) != 0) {
+			if((http_serve(connfd, &client)) != 0) {
 			//if((add(connfd)) != 0) {
-				fprintf(stderr, "%s\n", "echo() error");
+				fprintf(stderr, "echo() error, file: %s, line: %d\n", __FILE__, __LINE__);
 				exit(1);
 			}
 

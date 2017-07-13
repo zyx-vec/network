@@ -12,4 +12,6 @@ ssize_t Read(int fd, void *ptr, size_t nbytes);
 
 void Write(int fd, void *ptr, size_t nbytes);
 
+ssize_t get_http_request(int fd, void* ptr, int maxline);
+
 #endif

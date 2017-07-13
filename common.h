@@ -8,6 +8,7 @@
 #define ECHO_SERVER_PORT 5678
 
 #define MAXLINE 256
+#define MAXHEAD 1024
 
 // signal.c
 typedef void sigfunc(int);

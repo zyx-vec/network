@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "io.h"
 
@@ -75,6 +76,30 @@ ssize_t readline(int fd, void* buff, int maxlen) {
 
 	*p = '\0';
 	return n;
+}
+
+// returns: -1 on error
+ssize_t get_http_request(int fd, void* buff, int maxline) {
+    size_t n, rc;
+    char c, *p;
+
+    p = (char*)buff;
+    // request head
+    for(;;) {
+        if ((rc = readline(fd, p, maxline)) < 0) {
+            fprintf(stderr, "readline() error, file: %s, line: %d\n", __FILE__, __LINE__);
+            return -1;
+        } else if (rc == 0) {
+            return 0;
+        }
+        if (!strcmp(p, "\r\n")) {
+            p += 2;
+            break;
+        }
+        p += rc;
+    }
+    *p = '\0';
+    return ((void*)p - buff);
 }
 
 ssize_t Read(int fd, void *ptr, size_t nbytes)
