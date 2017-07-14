@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "io.h"
+#include "common.h"
 
 ssize_t readn(int fd, void* buff, size_t n) {
 	char* p = (char*)buff;
@@ -79,27 +80,60 @@ ssize_t readline(int fd, void* buff, int maxlen) {
 }
 
 // returns: -1 on error
-ssize_t get_http_request(int fd, void* buff, int maxline) {
-    size_t n, rc;
+ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {
+    size_t n, rc, wc = 0, lc = 0;
     char c, *p;
+    int flag = 0;
 
     p = (char*)buff;
     // request head
-    for(;;) {
+    for(; wc < MAXHEAD-2 ;) {
         if ((rc = readline(fd, p, maxline)) < 0) {
             fprintf(stderr, "readline() error, file: %s, line: %d\n", __FILE__, __LINE__);
             return -1;
         } else if (rc == 0) {
             return 0;
         }
+        lc += 1;
         if (!strcmp(p, "\r\n")) {
             p += 2;
+            flag = 1;
             break;
         }
         p += rc;
+        wc += rc;
     }
     *p = '\0';
-    return ((void*)p - buff);
+    *num_of_line = lc;
+    // MAXHEAD LENGTH of GET method request.
+    if (flag) {
+        return ((void*)p - buff);
+    } else {
+        return E_URI_OUTRANGE;
+    }
+}
+
+// TODO: don't only read one byte each time
+ssize_t get_http_entity_body(int fd, void* buff, int nbytes) {
+    int rc, n = 0;
+    char* p = (char*)buff;
+    char c;
+
+    while (n < nbytes) {
+        if((rc = read(fd, &c, 1)) < 0) {
+            if (errno == EINTR) {
+                continue;
+            }
+            fprintf(stderr, "get_http_entity_body error, file: %s, line: %d\n", __FILE__, __LINE__);
+            return -1;
+        } else if (rc == 0) {
+            return 0;
+        }
+        *p++ = c;
+        n++;
+    }
+    *p = '\0';
+    return n;
 }
 
 ssize_t Read(int fd, void *ptr, size_t nbytes)

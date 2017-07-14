@@ -8,8 +8,8 @@ server : daytime_server.o addr_converter.o
 client : client.o addr_converter.o
 	$(CC) -o client client.o addr_converter.o
 
-echo_server : echo_server.o io.o dsignal.o
-	$(CC) -o echo_server echo_server.o io.o dsignal.o -g
+echo_server : echo_server.o io.o common.o parse.o dsignal.o
+	$(CC) -o echo_server echo_server.o io.o common.o parse.o dsignal.o -g# -lrt -pthread
 
 echo_client : echo_client.o io.o dsignal.o
 	$(CC) -o echo_client echo_client.o io.o dsignal.o
@@ -37,6 +37,12 @@ io.o : io.c
 
 echo_server.o : echo_server.c
 	$(CC) -c echo_server.c
+
+common.o : common.c
+	$(CC) -c common.c
+
+parse.o : parse.c
+	$(CC) -c parse.c
 
 echo_client.o : echo_client.c
 	$(CC) -c echo_client.c

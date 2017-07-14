@@ -1,8 +1,8 @@
-*.o 
-*.exe 
-*.s 
-*.gch 
-*.txt 
-*.swp  
-*.un~  
+*.stackdump  
 *~  
+*.swp  
+*.o  
+*.s  
+*.txt  
+*.exe  
+*.pcap  
