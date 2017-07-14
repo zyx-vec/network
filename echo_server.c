@@ -79,7 +79,7 @@ int write_log(struct sockaddr_in* addr) {
     ptr = strcat(ptr, NEWLINE);
     printf("log: %s\n", ptr);
 
-    write(fd, ptr, strlen(ptr));
+    write(fd, ptr, strlen(ptr));    // One system is atomic, use two seperate write here could cause race condition
     // write(fd, "\r\n", 2);
 
     // sem_post(sem_id);
@@ -89,16 +89,56 @@ int write_log(struct sockaddr_in* addr) {
     return 0;
 }
 
+int send2(int fd, const char* response, int length) {
+    if((writen(fd, response, length)) < 0) {
+        fprintf(stderr, "writen() error, file: %s, line: %d\n", __FILE__, __LINE__);
+        return -1;
+    }
+    return 0;
+}
+
+int http_post(int fd, char** lines) {
+    int ret = 0;
+    char* entity_body;
+    int content_length, n;
+    char* response;
+    int response_length;
+
+    content_length = parse_http_content_length(lines);
+    // printf("content-length: %d\n", content_length);
+    entity_body = (char*)malloc(content_length+1);
+    n = get_http_entity_body(fd, entity_body, content_length);
+    printf("%s\n", entity_body);
+
+    response = content;
+    response_length = strlen(content);
+    if(send2(fd, response, response_length) < 0) {
+        ret = -1;
+    }
+
+    free(entity_body);
+    return ret;
+}
+
+int http_get(int fd, char** lines) {
+    int ret = 0, response_length;
+    char* response = content;
+    response_length = strlen(content);
+    if(send2(fd, response, response_length) < 0) {
+        ret = -1;
+    }
+    return ret;
+}
+
 int http_serve(int fd, struct sockaddr_in* addr) {
 
+    int ret = 0;
 	char buff[MAXHEAD]; // stackoverflow!!!
 	size_t n, response_length;
     char** lines;
-    char* entity_body;
 
     const char* ptr;  // make ptr point to response content
     int num_of_line = 0;
-    int content_length;
 
     n = get_http_request(fd, buff, MAXLINE, &num_of_line);
     printf("Request:\n%sNum of line: %d\n", buff, num_of_line);
@@ -106,8 +146,7 @@ int http_serve(int fd, struct sockaddr_in* addr) {
         if (n == E_URI_OUTRANGE) {
             response_length = strlen(URI_OUTRANGE_RESPONSE);
             ptr = URI_OUTRANGE_RESPONSE;
-            printf("OUT OR RANGE\n");
-            goto write_response;
+            send2(fd, ptr, response_length);
         }
         else {
             return -1;
@@ -117,37 +156,23 @@ int http_serve(int fd, struct sockaddr_in* addr) {
     lines = (char**)malloc(num_of_line * sizeof(char*));
     if (parse_http_request(buff, lines) != 0) {
         fprintf(stderr, "parse_http_request error, file: %s, line: %d\n", __FILE__, __LINE__);
-        return -1;
+        ret = -1;
+    } else {
+        if (!strncmp(buff, "POST", 4)) {
+            if (http_post(fd, lines) < 0) {
+                fprintf(stderr, "http_post error, file: %s, line: %d\n", __FILE__, __LINE__);
+                ret = -1;
+            }
+        } else if (!strncmp(buff, "GET", 3)) {
+            if (http_get(fd, lines) < 0) {
+                fprintf(stderr, "http_get error, file: %s, line: %d\n", __FILE__, __LINE__);
+                ret = -1;
+            }
+        }
     }
     
-    // Post
-    if (buff[0] == 'P' && buff[1] == 'O' && buff[2] == 'S' && buff[3] == 'T') {
-        content_length = parse_http_content_length(lines);
-        printf("content-length: %d\n", content_length);
-        entity_body = (char*)malloc(content_length+1);
-        n = get_http_entity_body(fd, entity_body, content_length);
-        printf("%s\n", entity_body);
-    } else {// Get, currently
-        
-    }
-
-    return 0;   // TODO
-
-    n = get_http_entity_body(fd, entity_body, 0);
-    if (n < 0)
-    response_length = strlen(content);
-    ptr = content;
-
-write_response:
-    if((writen(fd, ptr, response_length)) < 0) {
-        fprintf(stderr, "writen() error, file: %s, line: %d\n", __FILE__, __LINE__);
-        return -1;
-    }
-
-    free(entity_body);
     free(lines);
-
-    return 0;
+    return ret;
 }
 
 int add(int fd) {
@@ -181,7 +206,7 @@ int add(int fd) {
 }
 
 int main() {
-	int listenfd, connfd;
+	int listenfd, connfd, count = 0;
 
 	struct sockaddr_in server, client;
 	int len = sizeof(client);
@@ -209,8 +234,7 @@ int main() {
 	// when child process become zombie state, parent server process clean it up
 	// child could send SIGCHLD signal to parent when it terminates.
 	Signal(SIGCHLD, sig_chld);
-
-    int count = 0;
+    
 	for(;;) {
 		len = sizeof(client);
 		// connfd = accept(listenfd, (SA*)&client, &len);			// accept
@@ -224,6 +248,7 @@ int main() {
 			}
 		}
 
+        // 1344415204
 		if((fork()) == 0) {
 			close(listenfd);
 
