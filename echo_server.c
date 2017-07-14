@@ -69,7 +69,7 @@ int write_log(struct sockaddr_in* addr) {
     // must specify the third parameter: mode, because O_CREAT is here.
     int fd = open(LOG_PATH, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR);
     if (fd == -1) {
-        fprintf(stderr, "open log file failed, in file %s, line %d\n", __FILE__, __LINE__);
+        DEBUG("open");
         return -1;
     }
     cur_time = time(NULL);
@@ -91,7 +91,7 @@ int write_log(struct sockaddr_in* addr) {
 
 int send2(int fd, const char* response, int length) {
     if((writen(fd, response, length)) < 0) {
-        fprintf(stderr, "writen() error, file: %s, line: %d\n", __FILE__, __LINE__);
+        DEBUG("writen");
         return -1;
     }
     return 0;
@@ -155,17 +155,17 @@ int http_serve(int fd, struct sockaddr_in* addr) {
 
     lines = (char**)malloc(num_of_line * sizeof(char*));
     if (parse_http_request(buff, lines) != 0) {
-        fprintf(stderr, "parse_http_request error, file: %s, line: %d\n", __FILE__, __LINE__);
+        DEBUG("parse_http_request");
         ret = -1;
     } else {
         if (!strncmp(buff, "POST", 4)) {
             if (http_post(fd, lines) < 0) {
-                fprintf(stderr, "http_post error, file: %s, line: %d\n", __FILE__, __LINE__);
+                DEBUG("http_post");
                 ret = -1;
             }
         } else if (!strncmp(buff, "GET", 3)) {
             if (http_get(fd, lines) < 0) {
-                fprintf(stderr, "http_get error, file: %s, line: %d\n", __FILE__, __LINE__);
+                DEBUG("http_get");
                 ret = -1;
             }
         }
@@ -183,7 +183,7 @@ int add(int fd) {
 
 	for(;;) {
 		if((n = readline(fd, buff, MAXLINE)) < 0) {
-			fprintf(stderr, "%s\n", "readline() error");
+            DEBUG("readline");
 			return -1;
 		}
 		else if(n == 0) {
@@ -197,7 +197,7 @@ int add(int fd) {
 		}
 
 		if((writen(fd, buff, strlen(buff))) < 0) {
-			fprintf(stderr, "%s\n", "writen() error");
+            DEBUG("writen");
 			return -1;
 		}
 	}
@@ -212,7 +212,7 @@ int main() {
 	int len = sizeof(client);
 
 	if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {		// socket
-		fprintf(stderr, "%s\n", "socket() error");
+        DEBUG("socket");
 		exit(1);
 	}
 
@@ -222,12 +222,12 @@ int main() {
 	server.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	if((bind(listenfd, (SA*)&server, sizeof(server))) != 0) {	// bind
-		fprintf(stderr, "%s\n", "bind() error");
+        DEBUG("bind");
 		exit(1);
 	}
 
 	if((listen(listenfd, BACKLOG)) != 0) {						// listen
-		fprintf(stderr, "%s\n", "listen() error");
+        DEBUG("listen");
 		exit(1);
 	}
 
@@ -243,7 +243,7 @@ int main() {
 			if(errno == EINTR) {
 				continue;
 			} else {
-				fprintf(stderr, "accept() error, file: %s, line: %d\n", __FILE__, __LINE__);
+                DEBUG("accept");
 				exit(1);
 			}
 		}
@@ -254,7 +254,7 @@ int main() {
 
 			if((http_serve(connfd, &client)) != 0) {
 			//if((add(connfd)) != 0) {
-				fprintf(stderr, "echo() error, file: %s, line: %d\n", __FILE__, __LINE__);
+                DEBUG("http_serve");
 				exit(1);
 			}
 

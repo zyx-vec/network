@@ -89,7 +89,7 @@ ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {
     // request head
     for(; wc < MAXHEAD-2 ;) {
         if ((rc = readline(fd, p, maxline)) < 0) {
-            fprintf(stderr, "readline() error, file: %s, line: %d\n", __FILE__, __LINE__);
+            DEBUG("readline");
             return -1;
         } else if (rc == 0) {
             return 0;
@@ -124,7 +124,7 @@ ssize_t get_http_entity_body(int fd, void* buff, int nbytes) {
             if (errno == EINTR) {
                 continue;
             }
-            fprintf(stderr, "get_http_entity_body error, file: %s, line: %d\n", __FILE__, __LINE__);
+            DEBUG("get_http_entity_body");
             return -1;
         } else if (rc == 0) {
             return 0;
@@ -140,8 +140,8 @@ ssize_t Read(int fd, void *ptr, size_t nbytes)
 {
 	ssize_t		n;
 
-	if ( (n = read(fd, ptr, nbytes)) == -1) {
-		fprintf(stderr, "%s\n", "read() error");
+	if ((n = read(fd, ptr, nbytes)) == -1) {
+        DEBUG("read");
 		exit(1);
 	}
 	return(n);
@@ -150,7 +150,7 @@ ssize_t Read(int fd, void *ptr, size_t nbytes)
 void Write(int fd, void *ptr, size_t nbytes)
 {
 	if (write(fd, ptr, nbytes) != nbytes) {
-		fprintf(stderr, "%s\n", "write() error");
+        DEBUG("write");
 		exit(1);
 	}
 }

@@ -25,6 +25,9 @@ typedef void sigfunc(int);
 #define max(a,b) ((a)>(b) ? (a) : (b))
 #define min(a,b) ((a)<(b) ? (a) : (b))
 
+#define DEBUG(msg) \
+    fprintf(stderr, msg" error, file: %s, line: %d\n", __FILE__, __LINE__)
+
 
 #define URI_OUTRANGE_RESPONSE \
     "HTTP/1.0 414 Request-URI Too Long\r\nContent-type: text/plain\r\nContent-length: 19\r\n\r\nError! URI to long"
