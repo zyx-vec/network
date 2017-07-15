@@ -5,32 +5,79 @@
 
 #include "common.h"
 
-ssize_t parse_http_request(char* request, char** lines) {
-
-    char* p = request;
-    char c;
-    int count = 0;
-
-    lines[count++] = p;
-    while ((c = *p++)) {
-        if (c == '\r' && *p == '\n' && *(p+1)) {
-            *(p-1) = '\0';
-            *p = '\0';
-            lines[count++] = p+1;
-            p++;
-        }
+static void print_http_request(struct request_t* request) {
+    fprintf(stdout, "method:%surl:%sversion:%s\n",
+            request->url[0], request->url[1], request->url[2]);
+    int c, n;
+    c = 0;
+    n = request->head->num_of_head_lines;
+    char** lines = request->head->lines;
+    for (; c < n; c++) {
+        fprintf(stdout, "%s\n", lines[c]);
     }
-    lines[count-1] = NULL;  // The final '\r\n' as delimiter
-
-    // for (int i = 0; i < count; i++) {
-    //     printf("line %d: %s\n", i, lines[i]);
-    // }
-
-    return 0;
+    return;
 }
 
-ssize_t parse_http_content_length(char** lines) {
-    char** pp = lines;
+static ssize_t parse_http_split_lines(char* buff, struct head_t* head) {
+    assert(buff != NULL);
+    int ret = 0;
+    char* p = buff;
+    char c;
+    
+    char** lines = head->lines;
+    int num_of_head_lines = head->num_of_head_lines;
+    int count = 0;
+
+    while (count < num_of_head_lines) {
+        lines[count++] = p;
+        char* tmp = strstr(p, "\r\n");
+        if (tmp == NULL) {
+            ret = -1;
+            break;
+        }
+        *tmp++ = '\0';
+        *tmp++ = '\0';
+        p = tmp;
+    }
+    return ret;
+}
+
+ssize_t parse_http_request(char* buff, struct request_t* request) {
+    assert(buff != NULL && request != NULL);
+    int ret = 0;
+
+    char* request_line = buff;
+    for (int i = 0; i < 2; i++) {
+        char* tmp = strchr(request_line, ' ');
+        if (tmp == NULL)
+            return -1;
+        *tmp++ = '\0';
+        request->url[i] = request_line;
+        while (*tmp == ' ')
+            tmp++;
+        request_line = tmp;
+    }
+    char* tmp = strstr(request_line, "\r\n");
+    if (tmp == NULL)    {
+        return -1;
+    } 
+    *tmp++ = '\0';
+    *tmp++ = '\0';
+    request->url[2] = request_line;
+    request_line = tmp;
+
+    if (parse_http_split_lines(request_line, request->head) < 0) {
+        DEBUG("parse_http_split_lines");
+        return -1;
+    }
+
+    print_http_request(request);
+  
+    return ret;
+}
+
+ssize_t parse_http_content_length(struct request_t* request) {
+    char** pp = request->head->lines;
     assert(pp[0] != NULL);
     char* p = pp[0];
     const char text[] = "Content-Length: ";
@@ -46,4 +93,15 @@ ssize_t parse_http_content_length(char** lines) {
         p = *pp;
     }
     return result;
+}
+
+char* parse_http_url_type(char* p) {
+    assert(p != NULL);
+    char* end = p;
+
+    while(*++end)
+        ;
+    while(*--end != '.')
+        ;
+    return end;
 }

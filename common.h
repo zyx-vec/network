@@ -16,6 +16,8 @@
 
 #define NEWLINE "\r\n"
 
+#define HTML ".html"
+
 // ERROR code
 #define E_URI_OUTRANGE -414
 
@@ -33,5 +35,17 @@ typedef void sigfunc(int);
     "HTTP/1.0 414 Request-URI Too Long\r\nContent-type: text/plain\r\nContent-length: 19\r\n\r\nError! URI to long"
 
 int http_str2int(char* p);
+
+struct head_t;
+
+struct request_t {
+    char* url[3];
+    struct head_t* head;
+};
+
+struct head_t {
+    int num_of_head_lines;
+    char** lines;
+};
 
 #endif

@@ -97,14 +97,14 @@ int send2(int fd, const char* response, int length) {
     return 0;
 }
 
-int http_post(int fd, char** lines) {
+int http_post(int fd, struct request_t* request) {
     int ret = 0;
     char* entity_body;
     int content_length, n;
     char* response;
     int response_length;
 
-    content_length = parse_http_content_length(lines);
+    content_length = parse_http_content_length(request);
     // printf("content-length: %d\n", content_length);
     entity_body = (char*)malloc(content_length+1);
     n = get_http_entity_body(fd, entity_body, content_length);
@@ -120,10 +120,18 @@ int http_post(int fd, char** lines) {
     return ret;
 }
 
-int http_get(int fd, char** lines) {
-    int ret = 0, response_length;
+int http_get(int fd, struct request_t* request) {
+    int ret = 0, response_length, suffix_length=0;
+    char* type;
     char* response = content;
     response_length = strlen(content);
+    
+    type = parse_http_url_type(request->url[1]);
+    suffix_length = strlen(type);
+    // printf("type:%s, length:%d\n", type, suffix_length);
+    if (!strncmp(type, HTML, suffix_length)) {
+        
+    }
     if(send2(fd, response, response_length) < 0) {
         ret = -1;
     }
@@ -135,13 +143,11 @@ int http_serve(int fd, struct sockaddr_in* addr) {
     int ret = 0;
 	char buff[MAXHEAD]; // stackoverflow!!!
 	size_t n, response_length;
-    char** lines;
 
     const char* ptr;  // make ptr point to response content
     int num_of_line = 0;
 
     n = get_http_request(fd, buff, MAXLINE, &num_of_line);
-    printf("Request:\n%sNum of line: %d\n", buff, num_of_line);
     if (n < 2 || (write_log(addr) < 0)) {
         if (n == E_URI_OUTRANGE) {
             response_length = strlen(URI_OUTRANGE_RESPONSE);
@@ -153,25 +159,29 @@ int http_serve(int fd, struct sockaddr_in* addr) {
         }
     }
 
-    lines = (char**)malloc(num_of_line * sizeof(char*));
-    if (parse_http_request(buff, lines) != 0) {
+    struct request_t request;
+    struct head_t head;
+    head.num_of_head_lines = num_of_line - 2;
+    head.lines = (char**)malloc(head.num_of_head_lines * sizeof(char*));
+    request.head = &head;
+    if (parse_http_request(buff, &request) != 0) {
         DEBUG("parse_http_request");
         ret = -1;
     } else {
-        if (!strncmp(buff, "POST", 4)) {
-            if (http_post(fd, lines) < 0) {
+        if (!strcmp(request.url[0], "POST")) {
+            if (http_post(fd, &request) < 0) {
                 DEBUG("http_post");
                 ret = -1;
             }
-        } else if (!strncmp(buff, "GET", 3)) {
-            if (http_get(fd, lines) < 0) {
+        } else if (!strcmp(request.url[0], "GET")) {
+            if (http_get(fd, &request) < 0) {
                 DEBUG("http_get");
                 ret = -1;
             }
         }
     }
     
-    free(lines);
+    free(head.lines);
     return ret;
 }
 
