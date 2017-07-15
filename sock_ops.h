@@ -12,11 +12,11 @@ int sock_bind_wild(int sockfd, int family);
 
 // returns: 0 if addresses are of the same family and equal, else nonzero
 int sock_cmp_addr(const struct sockaddr* sa1,
-				  const struct sockaddr* sa2, socklen_t addrlen);
+                  const struct sockaddr* sa2, socklen_t addrlen);
 
 // returns: 0 if addresses are of the same family and ports are equal, else nonzero
 int sock_cmp_port(const struct sockaddr* sa1,
-				  const struct sockaddr* sa2, socklen_t addrlen);
+                  const struct sockaddr* sa2, socklen_t addrlen);
 
 // returns: non-null pointer if OK, NULL on error
 char* sock_ntop_host(const struct sockaddr* sa, socklen_t addrlen);

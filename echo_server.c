@@ -34,25 +34,25 @@ Hi! I\'m a message!";
 
 
 void sig_chld(int signo) {
-	pid_t pid;
-	int stat;
+    pid_t pid;
+    int stat;
 
-	// pid = wait(&stat);
-	// // wait it child to clean it up. But wait is not enough,
-	// // because if several signals come almost at the same
-	// // time, only have one or two signal was handled, result
-	// // to other signals be ignored by the kernel.
-	// // SIGNAL CAN'T BE QUEUED!
-	// fprintf(stdout, "child %d terminated.\n", pid);
+    // pid = wait(&stat);
+    // // wait it child to clean it up. But wait is not enough,
+    // // because if several signals come almost at the same
+    // // time, only have one or two signal was handled, result
+    // // to other signals be ignored by the kernel.
+    // // SIGNAL CAN'T BE QUEUED!
+    // fprintf(stdout, "child %d terminated.\n", pid);
 
-	while((pid = waitpid(-1, &stat, WNOHANG)) > 0) {
-		fprintf(stdout, "child %d terminated.\n", pid);
-	}
+    while((pid = waitpid(-1, &stat, WNOHANG)) > 0) {
+        fprintf(stdout, "child %d terminated.\n", pid);
+    }
 
-	return;
-	// may interrupt a current blocked system call, like
-	// accept() of the parent process. so we need handle
-	// it, when it happends. see below calls to accept().
+    return;
+    // may interrupt a current blocked system call, like
+    // accept() of the parent process. so we need handle
+    // it, when it happends. see below calls to accept().
 }
 
 int write_log(struct sockaddr_in* addr) {
@@ -141,8 +141,8 @@ int http_get(int fd, struct request_t* request) {
 int http_serve(int fd, struct sockaddr_in* addr) {
 
     int ret = 0;
-	char buff[MAXHEAD]; // stackoverflow!!!
-	size_t n, response_length;
+    char buff[MAXHEAD]; // stackoverflow!!!
+    size_t n, response_length;
 
     const char* ptr;  // make ptr point to response content
     int num_of_line = 0;
@@ -186,96 +186,96 @@ int http_serve(int fd, struct sockaddr_in* addr) {
 }
 
 int add(int fd) {
-	char buff[MAXLINE];
-	size_t n;
+    char buff[MAXLINE];
+    size_t n;
 
-	long arg1, arg2;
+    long arg1, arg2;
 
-	for(;;) {
-		if((n = readline(fd, buff, MAXLINE)) < 0) {
+    for(;;) {
+        if((n = readline(fd, buff, MAXLINE)) < 0) {
             DEBUG("readline");
-			return -1;
-		}
-		else if(n == 0) {
-			return 0;
-		}
+            return -1;
+        }
+        else if(n == 0) {
+            return 0;
+        }
 
-		if(sscanf(buff, "%ld%ld", &arg1, &arg2) == 2) {
-			snprintf(buff, sizeof(buff), "%ld\n", arg1+arg2);
-		} else {
-			snprintf(buff, sizeof(buff), "input error.\n");
-		}
+        if(sscanf(buff, "%ld%ld", &arg1, &arg2) == 2) {
+            snprintf(buff, sizeof(buff), "%ld\n", arg1+arg2);
+        } else {
+            snprintf(buff, sizeof(buff), "input error.\n");
+        }
 
-		if((writen(fd, buff, strlen(buff))) < 0) {
+        if((writen(fd, buff, strlen(buff))) < 0) {
             DEBUG("writen");
-			return -1;
-		}
-	}
+            return -1;
+        }
+    }
 
-	return 0;
+    return 0;
 }
 
 int main() {
-	int listenfd, connfd, count = 0;
+    int listenfd, connfd, count = 0;
 
-	struct sockaddr_in server, client;
-	int len = sizeof(client);
+    struct sockaddr_in server, client;
+    int len = sizeof(client);
 
-	if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {		// socket
+    if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {        // socket
         DEBUG("socket");
-		exit(1);
-	}
+        exit(1);
+    }
 
-	bzero(&server, sizeof(server));
-	server.sin_family = AF_INET;
-	server.sin_port = htons(ECHO_SERVER_PORT);
-	server.sin_addr.s_addr = htonl(INADDR_ANY);
+    bzero(&server, sizeof(server));
+    server.sin_family = AF_INET;
+    server.sin_port = htons(ECHO_SERVER_PORT);
+    server.sin_addr.s_addr = htonl(INADDR_ANY);
 
-	if((bind(listenfd, (SA*)&server, sizeof(server))) != 0) {	// bind
+    if((bind(listenfd, (SA*)&server, sizeof(server))) != 0) {    // bind
         DEBUG("bind");
-		exit(1);
-	}
+        exit(1);
+    }
 
-	if((listen(listenfd, BACKLOG)) != 0) {						// listen
+    if((listen(listenfd, BACKLOG)) != 0) {                        // listen
         DEBUG("listen");
-		exit(1);
-	}
+        exit(1);
+    }
 
-	// when child process become zombie state, parent server process clean it up
-	// child could send SIGCHLD signal to parent when it terminates.
-	Signal(SIGCHLD, sig_chld);
+    // when child process become zombie state, parent server process clean it up
+    // child could send SIGCHLD signal to parent when it terminates.
+    Signal(SIGCHLD, sig_chld);
     
-	for(;;) {
-		len = sizeof(client);
-		// connfd = accept(listenfd, (SA*)&client, &len);			// accept
+    for(;;) {
+        len = sizeof(client);
+        // connfd = accept(listenfd, (SA*)&client, &len);        	// accept
         count += 1;
-		if((connfd = accept(listenfd, (SA*)&client, &len)) < 0) {
-			if(errno == EINTR) {
-				continue;
-			} else {
+        if((connfd = accept(listenfd, (SA*)&client, &len)) < 0) {
+            if(errno == EINTR) {
+                continue;
+            } else {
                 DEBUG("accept");
-				exit(1);
-			}
-		}
+                exit(1);
+            }
+        }
 
         // 1344415204
-		if((fork()) == 0) {
-			close(listenfd);
+        if((fork()) == 0) {
+            close(listenfd);
 
-			if((http_serve(connfd, &client)) != 0) {
-			//if((add(connfd)) != 0) {
+            if((http_serve(connfd, &client)) != 0) {
+            //if((add(connfd)) != 0) {
                 DEBUG("http_serve");
-				exit(1);
-			}
+                exit(1);
+            }
 
-			fprintf(stderr, "%s\n", "client closed");
-			close(connfd);
-			exit(0);
-		}
-		close(connfd);
+            fprintf(stderr, "%s\n", "client closed");
+            close(connfd);
+            exit(0);
+        }
+        close(connfd);
         printf("TOTAL number of request: %d\n", count);
-	}
+    }
 
 
-	return 0;
+    return 0;
 }
