@@ -52,7 +52,7 @@ ssize_t writen(int fd, const void* buff, size_t n) {
     return n;    // must write all content to fd's buffer
 }
 
-// returns: -1 on error
+// returns: -1 on error, otherwise bytes read
 ssize_t readline(int fd, void* buff, int maxlen) {
     size_t n, rc;
     char c, *p;
@@ -94,11 +94,22 @@ ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {
         } else if (rc == 0) {
             return 0;
         }
-        lc += 1;
-        if (!strcmp(p, "\r\n")) {
-            p += 2;
-            flag = 1;
-            break;
+        if (*p != ' ' && *p != '\t') {  // new head line
+            lc += 1;
+            if (!strcmp(p, "\r\n")) {
+                p += 2;
+                flag = 1;
+                break;
+            }
+        } else {
+            // previous head line
+            char* tmp = p-2; // ends with "\r\n\0", but p point to '\0', so move backward 2 bytes.
+            c = *p;
+            while(c == ' ' || c == '\t') {
+                rc -= 1;
+                c = *++p;
+            }
+            memmove(tmp, p, rc);
         }
         p += rc;
         wc += rc;
@@ -106,6 +117,7 @@ ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {
     *p = '\0';
     *num_of_line = lc;
     // MAXHEAD LENGTH of GET method request.
+
     if (flag) {
         return ((void*)p - buff);
     } else {

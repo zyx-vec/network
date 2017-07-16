@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 
 #include <time.h>
+#include <assert.h>
 
 #include "common.h"
 #include "io.h"
@@ -97,6 +98,11 @@ int send2(int fd, const char* response, int length) {
     return 0;
 }
 
+int send_response(int fd, struct request_t* request) {
+    assert(request != NULL);
+    printf("send response: %s\n", request->url[1]);
+}
+
 int http_post(int fd, struct request_t* request) {
     int ret = 0;
     char* entity_body;
@@ -128,13 +134,51 @@ int http_get(int fd, struct request_t* request) {
     
     type = parse_http_url_type(request->url[1]);
     suffix_length = strlen(type);
-    // printf("type:%s, length:%d\n", type, suffix_length);
-    if (!strncmp(type, HTML, suffix_length)) {
-        
+    
+    char* filename = (char*)malloc(strlen(request->url[1]));
+    memset(filename, 0, strlen(request->url[1]));
+    if(parse_http_request_filename(filename, request) < 0) {
+        DEBUG("parse_http_request_filename");
+        return -1;
     }
-    if(send2(fd, response, response_length) < 0) {
+    int file;
+    struct stat filestat;
+    char filesize[7];   // attacker!
+    if((file = open(filename, O_RDONLY)) >= 0 && ((fstat(file, &filestat)) >= 0)) {
+        response_length = filestat.st_size;
+        printf("file size: %d\n", response_length);
+        sprintf(filesize, "%zd\r\n", response_length);
+        response = (char*)malloc(MAXHEAD);
+        response[0] = '\0';
+        strcat(response, "HTTP/1.1 200 OK\r\nContent-Length: ");
+        strcat(response, filesize);
+        strcat(response, "Content-Type: ");
+        strcat(response, type);
+        strcat(response, "\r\n");
+        strcat(response, "Connection: keep-alive\r\n\r\n");
+        if (writen(fd, response, strlen(response)) < 0) {
+            DEBUG("writen");
+            return -1;
+        }
+
+        char* buff = (char*)malloc(response_length);
+        if((readn(file, buff, response_length)) != response_length) {
+            DEBUG("readn");
+            ret = -1;
+        } else {
+            if (writen(fd, buff, response_length) != response_length) {
+                DEBUG("writen");
+                ret = -1;
+            }
+        }
+
+        free(response);
+        free(buff);
+    } else {
+        DEBUG("open & fstat");
         ret = -1;
     }
+
     return ret;
 }
 

@@ -58,7 +58,7 @@ ssize_t parse_http_request(char* buff, struct request_t* request) {
         request_line = tmp;
     }
     char* tmp = strstr(request_line, "\r\n");
-    if (tmp == NULL)    {
+    if (tmp == NULL) {
         return -1;
     } 
     *tmp++ = '\0';
@@ -103,5 +103,20 @@ char* parse_http_url_type(char* p) {
         ;
     while(*--end != '.')
         ;
-    return end;
+    return end+1;
+}
+
+ssize_t parse_http_request_filename(char* filename, struct request_t* request) {
+    char* p = request->url[1];
+    // TODO: add parameter support for GET method.
+    if (*p == '/' && *(p+1) == '\0') {
+        strcat(filename, "index.html");
+        return 1;
+    } else if (!strcmp(p, "/home")) {
+        strcat(filename, "homepage.html");
+        return 1;
+    }
+    
+    strcat(filename, ++p);
+    return 1;
 }
