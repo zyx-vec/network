@@ -1,0 +1,128 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ADDR_CONVERTER_H_	.\addr_converter.h	3;"	d
+BACKLOG	.\common.h	10;"	d
+BACK_LOG	.\daytime_server.c	14;"	d	file:
+BUFFSIZE	.\daytime_server.c	12;"	d	file:
+BUFFSIZE	.\pselect.c	8;"	d	file:
+COMMON_H_	.\common.h	3;"	d
+DEBUG	.\common.h	30;"	d
+D_SIGNAL_H_	.\dsignal.h	3;"	d
+Disassembly	.\asm.s	/^Disassembly of section .text:$/;"	l
+ECHO_SERVER_PORT	.\common.h	11;"	d
+EXPECT_BASE	.\test.c	18;"	d	file:
+EXPECT_EQ_INT	.\test.c	28;"	d	file:
+EXPECT_EQ_STRING	.\test.c	29;"	d	file:
+E_URI_OUTRANGE	.\common.h	22;"	d
+HTML	.\common.h	19;"	d
+IO_H_	.\io.h	3;"	d
+IS_DIGIT	.\addr_converter.c	8;"	d	file:
+Inet_ntop	.\addr_converter.c	/^char* Inet_ntop(const struct sockaddr* sa, socklen_t salen) {$/;"	f
+Inet_pton	.\addr_converter.c	/^int Inet_pton(const char* str, void* addr) {$/;"	f
+KiB	.\common.h	7;"	d
+LOG_PATH	.\echo_server.c	29;"	d	file:
+MAXENTITYBODY	.\common.h	15;"	d
+MAXHEAD	.\common.h	14;"	d
+MAXLINE	.\common.h	13;"	d
+MAXSIZE	.\test_time.c	6;"	d	file:
+MiB	.\common.h	8;"	d
+NEWLINE	.\common.h	17;"	d
+Read	.\io.c	/^ssize_t Read(int fd, void *ptr, size_t nbytes)$/;"	f
+SA	.\common.h	5;"	d
+SA	.\test.c	14;"	d	file:
+SEM_PATH	.\echo_server.c	27;"	d	file:
+SOCKADDR_IN	.\sock_ops.h	7;"	d
+SOCKADDR_IN6	.\sock_ops.h	8;"	d
+SOCK_OPS_H_	.\sock_ops.h	3;"	d
+Signal	.\dsignal.c	/^sigfunc* Signal(int signo, sigfunc* func) {$/;"	f
+URI_OUTRANGE_RESPONSE	.\common.h	34;"	d
+Write	.\io.c	/^void Write(int fd, void *ptr, size_t nbytes)$/;"	f
+_PARSE_H	.\parse.h	2;"	d
+a1	.\asm.s	/^  a1:	8b 4d 10             	mov    0x10(%rbp),%ecx$/;"	l
+a4	.\asm.s	/^  a4:	e8 00 00 00 00       	callq  a9 <writen+0x3b>$/;"	l
+a9	.\asm.s	/^  a9:	48 89 45 e8          	mov    %rax,-0x18(%rbp)$/;"	l
+ad	.\asm.s	/^  ad:	48 83 7d e8 00       	cmpq   $0x0,-0x18(%rbp)$/;"	l
+add	.\echo_server.c	/^int add(int fd) {$/;"	f
+b	.\asm.s	/^   b:	48 89 55 18          	mov    %rdx,0x18(%rbp)$/;"	l
+b2	.\asm.s	/^  b2:	75 09                	jne    bd <writen+0x4f>$/;"	l
+b4	.\asm.s	/^  b4:	48 c7 c0 ff ff ff ff 	mov    $0xffffffffffffffff,%rax$/;"	l
+bb	.\asm.s	/^  bb:	eb 1b                	jmp    d8 <writen+0x6a>$/;"	l
+bd	.\asm.s	/^  bd:	48 8b 45 e8          	mov    -0x18(%rbp),%rax$/;"	l
+c1	.\asm.s	/^  c1:	48 29 45 f0          	sub    %rax,-0x10(%rbp)$/;"	l
+c5	.\asm.s	/^  c5:	48 8b 45 e8          	mov    -0x18(%rbp),%rax$/;"	l
+c9	.\asm.s	/^  c9:	48 01 45 f8          	add    %rax,-0x8(%rbp)$/;"	l
+cd	.\asm.s	/^  cd:	48 83 7d f0 00       	cmpq   $0x0,-0x10(%rbp)$/;"	l
+client_info	.\daytime_server.c	/^void client_info(struct sockaddr_in* client, int size) {$/;"	f
+content	.\echo_server.c	/^char* content = "HTTP\/1.0 200 OK\\r\\n\\$/;"	v
+d2	.\asm.s	/^  d2:	75 bf                	jne    93 <writen+0x25>$/;"	l
+d4	.\asm.s	/^  d4:	48 8b 45 20          	mov    0x20(%rbp),%rax$/;"	l
+d8	.\asm.s	/^  d8:	48 83 c4 40          	add    $0x40,%rsp$/;"	l
+dc	.\asm.s	/^  dc:	5d                   	pop    %rbp$/;"	l
+dd	.\asm.s	/^  dd:	c3                   	retq   $/;"	l
+de	.\asm.s	/^  de:	55                   	push   %rbp$/;"	l
+df	.\asm.s	/^  df:	48 89 e5             	mov    %rsp,%rbp$/;"	l
+doit	.\echo_client.c	/^void doit(FILE* fp, int fd) {$/;"	f
+doit_select	.\echo_client.c	/^void doit_select(FILE* fp, int fd) {$/;"	f
+e2	.\asm.s	/^  e2:	48 83 ec 40          	sub    $0x40,%rsp$/;"	l
+e6	.\asm.s	/^  e6:	89 4d 10             	mov    %ecx,0x10(%rbp)$/;"	l
+e9	.\asm.s	/^  e9:	48 89 55 18          	mov    %rdx,0x18(%rbp)$/;"	l
+ed	.\asm.s	/^  ed:	44 89 45 20          	mov    %r8d,0x20(%rbp)$/;"	l
+err_sys	.\pselect.c	/^void err_sys(const char *p_error)$/;"	f
+f	.\asm.s	/^   f:	4c 89 45 20          	mov    %r8,0x20(%rbp)$/;"	l
+f1	.\asm.s	/^  f1:	48 8b 45 18          	mov    0x18(%rbp),%rax$/;"	l
+f5	.\asm.s	/^  f5:	48 89 45 f0          	mov    %rax,-0x10(%rbp)$/;"	l
+f9	.\asm.s	/^  f9:	48 c7 45 f8 01 00 00 	movq   $0x1,-0x8(%rbp)$/;"	l
+get_http_entity_body	.\io.c	/^ssize_t get_http_entity_body(int fd, void* buff, int nbytes) {$/;"	f
+get_http_request	.\io.c	/^ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {$/;"	f
+head	.\common.h	/^    struct head_t* head;$/;"	m	struct:request_t	typeref:struct:request_t::head_t
+head_t	.\common.h	/^struct head_t {$/;"	s
+http_get	.\echo_server.c	/^int http_get(int fd, struct request_t* request) {$/;"	f
+http_post	.\echo_server.c	/^int http_post(int fd, struct request_t* request) {$/;"	f
+http_serve	.\echo_server.c	/^int http_serve(int fd, struct sockaddr_in* addr) {$/;"	f
+http_str2int	.\common.c	/^int http_str2int(char* p) {$/;"	f
+lines	.\common.h	/^    char** lines;$/;"	m	struct:head_t
+main	.\client.c	/^int main() {$/;"	f
+main	.\daytime_server.c	/^int main() {$/;"	f
+main	.\echo_client.c	/^int main(int argc, char** argv) {$/;"	f
+main	.\echo_server.c	/^int main() {$/;"	f
+main	.\pselect.c	/^int main(int argc, char **argv) {$/;"	f
+main	.\select_echo_server.c	/^int main() {$/;"	f
+main	.\test.c	/^int main() {$/;"	f
+main	.\test_time.c	/^int main() {$/;"	f
+max	.\common.h	27;"	d
+min	.\common.h	28;"	d
+num_of_head_lines	.\common.h	/^    int num_of_head_lines;$/;"	m	struct:head_t
+parse_http_content_length	.\parse.c	/^ssize_t parse_http_content_length(struct request_t* request) {$/;"	f
+parse_http_request	.\parse.c	/^ssize_t parse_http_request(char* buff, struct request_t* request) {$/;"	f
+parse_http_request_filename	.\parse.c	/^ssize_t parse_http_request_filename(char* filename, struct request_t* request) {$/;"	f
+parse_http_split_lines	.\parse.c	/^static ssize_t parse_http_split_lines(char* buff, struct head_t* head) {$/;"	f	file:
+parse_http_url_type	.\parse.c	/^char* parse_http_url_type(char* p) {$/;"	f
+passed	.\test.c	/^int passed, total;$/;"	v
+print_http_request	.\parse.c	/^static void print_http_request(struct request_t* request) {$/;"	f	file:
+readline	.\io.c	/^ssize_t readline(int fd, void* buff, int maxlen) {$/;"	f
+readn	.\io.c	/^ssize_t readn(int fd, void* buff, size_t n) {$/;"	f
+request_t	.\common.h	/^struct request_t {$/;"	s
+send2	.\echo_server.c	/^int send2(int fd, const char* response, int length) {$/;"	f
+send_response	.\echo_server.c	/^int send_response(int fd, struct request_t* request) {$/;"	f
+sig_alrm	.\pselect.c	/^void sig_alrm(int signo)$/;"	f
+sig_chld	.\echo_server.c	/^void sig_chld(int signo) {$/;"	f
+sig_pipe	.\echo_client.c	/^void sig_pipe(int signo) {$/;"	f
+sigfunc	.\common.h	/^typedef void sigfunc(int);$/;"	t
+sock_bind_wild	.\sock_ops.c	/^int sock_bind_wild(int sockfd, int family) {$/;"	f
+sock_cmp_addr	.\sock_ops.c	/^int sock_cmp_addr(const struct sockaddr* sa1,$/;"	f
+sock_cmp_port	.\sock_ops.c	/^int sock_cmp_port(const struct sockaddr* sa1,$/;"	f
+sock_ntop_host	.\sock_ops.c	/^char* sock_ntop_host(const struct sockaddr* sa, socklen_t addrlen) {$/;"	f
+sock_set_addr	.\sock_ops.c	/^void sock_set_addr(const struct sockaddr* sa, socklen_t addrlen, void* ptr) {$/;"	f
+sock_set_port	.\sock_ops.c	/^void sock_set_port(const struct sockaddr* sa, socklen_t addrlen, int* port) {$/;"	f
+sock_set_wild	.\sock_ops.c	/^int sock_set_wild(struct sockaddr* sa, socklen_t addrlen) {$/;"	f
+test	.\test.c	/^void test() {$/;"	f
+test_addr_converter	.\test.c	/^void test_addr_converter() {$/;"	f
+test_sock_ops	.\test.c	/^void test_sock_ops() {$/;"	f
+total	.\test.c	/^int passed, total;$/;"	v
+url	.\common.h	/^    char* url[3];$/;"	m	struct:request_t
+write_log	.\echo_server.c	/^int write_log(struct sockaddr_in* addr) {$/;"	f
+writen	.\io.c	/^ssize_t writen(int fd, const void* buff, size_t n) {$/;"	f
