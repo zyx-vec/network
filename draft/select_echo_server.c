@@ -61,6 +61,7 @@ int main() {
 
         if(FD_ISSET(listenfd, &rset)) {
             clilen = sizeof(client_addr);
+			printf("$$$$$$$$$$$$$$$$$\n");
             if((connfd = accept(listenfd, (SA*)&client_addr, &clilen)) < 0) {
                 fprintf(stderr, "%s\n", "accept() error");
                 exit(1);
