@@ -115,6 +115,8 @@ int http_post(int fd, struct request_t* request) {
     entity_body = (char*)malloc(content_length+1);
     n = get_http_entity_body(fd, entity_body, content_length);
     printf("%s\n", entity_body);
+    request->u.entity_body = entity_body;
+    request->size = content_length;
 
     response = content;
     response_length = strlen(content);
@@ -122,7 +124,6 @@ int http_post(int fd, struct request_t* request) {
         ret = -1;
     }
 
-    free(entity_body);
     return ret;
 }
 
@@ -158,6 +159,7 @@ int http_get(int fd, struct request_t* request) {
         strcat(response, "Connection: keep-alive\r\n\r\n");
         if (writen(fd, response, strlen(response)) < 0) {
             DEBUG("writen");
+            free(response);
             return -1;
         }
 
@@ -205,6 +207,9 @@ int http_serve(int fd, struct sockaddr_in* addr) {
 
     struct request_t request;
     struct head_t head;
+    memset(&request, 0, sizeof(struct request_t));
+    memset(&head, 0, sizeof(struct head_t));
+
     head.num_of_head_lines = num_of_line - 2;
     head.lines = (char**)malloc(head.num_of_head_lines * sizeof(char*));
     request.head = &head;
@@ -226,6 +231,10 @@ int http_serve(int fd, struct sockaddr_in* addr) {
     }
     
     free(head.lines);
+    if (!strcmp(request.url[0], "GET"))
+        free(request.u.args);
+    else if (!strcmp(request.url[0], "POST"))
+        free(request.u.entity_body);
     return ret;
 }
 

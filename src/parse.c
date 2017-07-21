@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #include "common.h"
 
@@ -14,6 +15,14 @@ static void print_http_request(struct request_t* request) {
     char** lines = request->head->lines;
     for (; c < n; c++) {
         fprintf(stdout, "%s\n", lines[c]);
+    }
+    if (!strcmp(request->url[0], "GET")) {
+        struct arg_t* args = request->u.args;
+        for (int i = 0; i < request->size; i++) {
+            fprintf(stdout, "key: %s, value: %s\n", args[i].key, args[i].value);
+        }
+    } else if (!strcmp(request->url[0], "POST")) {
+        fprintf(stdout, "entity body:\n%s\n", request->u.entity_body);
     }
     return;
 }
@@ -42,11 +51,56 @@ static ssize_t parse_http_split_lines(char* buff, struct head_t* head) {
     return ret;
 }
 
+static ssize_t parse_http_add_parameter(char* begin, struct request_t* request, int n) {
+    printf("parse_http_add_parameter\n");
+    printf("argument: %s\n", begin);
+    char* p = begin;
+    char* equal;
+    while ((equal = strchr(p, '=')) != NULL) {
+        *equal = '\0';
+        request->u.args[n].key = p;
+        request->u.args[n].value = equal+1;
+    }
+    return 0;
+}
+
+static ssize_t parse_http_get_arg_num(char* buff) {
+    char* p = buff;
+    char* and;
+    int count = 1;
+    while ((and = strchr(p, '&')) != NULL) {
+        count++;
+        p = and+1;
+    }
+    return count;
+}
+
+static ssize_t parse_http_get_parameters(char* buff, struct request_t* request) {
+    char* and;
+    char* p = buff;
+    assert(p != NULL);
+    int num_of_args = parse_http_get_arg_num(p);
+    assert(num_of_args > 0);
+    request->size = num_of_args;
+    request->u.args = (struct arg_t*)malloc(num_of_args * sizeof(struct arg_t));
+    int c = 0;
+    while ((and = strchr(p, '&')) != NULL) {
+        *and = '\0';
+        parse_http_add_parameter(p, request, c);
+        c++;
+        p = and+1;
+    }
+    parse_http_add_parameter(p, request, c);
+    return 0;
+}
+
+
 ssize_t parse_http_request(char* buff, struct request_t* request) {
     assert(buff != NULL && request != NULL);
     int ret = 0;
 
     char* request_line = buff;
+    char* args;
     for (int i = 0; i < 2; i++) {
         char* tmp = strchr(request_line, ' ');
         if (tmp == NULL)
@@ -71,8 +125,15 @@ ssize_t parse_http_request(char* buff, struct request_t* request) {
         return -1;
     }
 
+    if ((args = strchr(request->url[1], '?')) != NULL) {
+        *args = '\0';
+        if (parse_http_get_parameters(args+1, request) < 0) {
+            DEBUG("http_parse_get_parameters");
+            return -1;
+        }
+    }
     print_http_request(request);
-  
+
     return ret;
 }
 
@@ -106,8 +167,10 @@ char* parse_http_url_type(char* p) {
     return end+1;
 }
 
+
 ssize_t parse_http_request_filename(char* filename, struct request_t* request) {
     char* p = request->url[1];
+    char* args;
     // TODO: add parameter support for GET method.
     if (*p == '/' && *(p+1) == '\0') {
         strcat(filename, "index.html");

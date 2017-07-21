@@ -19,7 +19,8 @@
 #define HTML ".html"
 
 // ERROR code
-#define E_URI_OUTRANGE -414
+#define E_NOT_FOUND     -404
+#define E_URI_OUTRANGE  -414
 
 // signal.c
 typedef void sigfunc(int);
@@ -37,15 +38,26 @@ typedef void sigfunc(int);
 int http_str2int(char* p);
 
 struct head_t;
+struct arg_t;
 
 struct request_t {
     char* url[3];
     struct head_t* head;
+    int size;
+    union {
+        struct arg_t* args;
+        char* entity_body;
+    } u;
 };
 
 struct head_t {
     int num_of_head_lines;
     char** lines;
+};
+
+struct arg_t {
+    char* key;
+    char* value;
 };
 
 #endif
