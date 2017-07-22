@@ -9,4 +9,6 @@ char* parse_http_url_type(char* p);
 
 ssize_t parse_http_request_filename(char* filename, struct request_t* request);
 
+ssize_t parse_http_is_keep_alive(struct request_t* request);
+
 #endif

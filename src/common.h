@@ -36,6 +36,7 @@ typedef void sigfunc(int);
     "HTTP/1.0 414 Request-URI Too Long\r\nContent-type: text/plain\r\nContent-length: 19\r\n\r\nError! URI to long"
 
 int http_str2int(char* p);
+int short2str(short n, char* p);
 
 struct head_t;
 struct arg_t;

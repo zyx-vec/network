@@ -183,3 +183,25 @@ ssize_t parse_http_request_filename(char* filename, struct request_t* request) {
     strcat(filename, ++p);
     return 1;
 }
+
+
+ssize_t parse_http_is_keep_alive(struct request_t* request) {
+    char** lines = request->head->lines;
+    int num = request->head->num_of_head_lines;
+    const char CONNECTION[] = "Connection:";
+    int size = sizeof(CONNECTION)-1;
+
+    for (int i = 0; i < num; i++) {
+        if (!strncmp(lines[i], CONNECTION, size)) {
+            char* p = lines[i] + size;
+            while (*p == ' ')
+                p++;
+            if (!strcmp(p, "keep-alive"))
+                return 1;
+            else
+                return 0;
+        }
+    }
+
+    return 0;
+}

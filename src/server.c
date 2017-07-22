@@ -63,6 +63,7 @@ int write_log(struct sockaddr_in* addr) {
     struct tm* cur_tm;
     memset(log_buff, 0, sizeof(log_buff));
     char* ip = inet_ntoa(addr->sin_addr);
+    short port = ntohs(addr->sin_port);
     
     // sem_t* sem_id = sem_open(SEM_PATH, O_CREAT, S_IRUSR | S_IWUSR, 1);
     // sem_wait(sem_id);
@@ -77,7 +78,9 @@ int write_log(struct sockaddr_in* addr) {
     cur_tm = localtime(&cur_time);
     strftime(log_buff, sizeof(log_buff)-1, "%F %T, client's ip: ", cur_tm);
     ptr = strcat(ptr, ip);
-    ptr = strcat(ptr, NEWLINE);
+    char port_s[9];
+    snprintf(port_s, sizeof(port_s), ":%d\r\n", port);
+    ptr = strcat(ptr, port_s);
     printf("log: %s\n", ptr);
 
     write(fd, ptr, strlen(ptr));    // One system is atomic, use two seperate write here could cause race condition
@@ -185,6 +188,7 @@ int http_get(int fd, struct request_t* request) {
 }
 
 int http_serve(int fd, struct sockaddr_in* addr) {
+    static int C = 0;
 
     int ret = 0;
     char buff[MAXHEAD]; // stackoverflow!!!
@@ -229,13 +233,27 @@ int http_serve(int fd, struct sockaddr_in* addr) {
             }
         }
     }
-    
-    free(head.lines);
-    if (!strcmp(request.url[0], "GET"))
-        free(request.u.args);
-    else if (!strcmp(request.url[0], "POST"))
-        free(request.u.entity_body);
-    return ret;
+
+
+    if (parse_http_is_keep_alive(&request)) {
+        printf("********Keep-alive********\n");
+        free(head.lines);
+        if (!strcmp(request.url[0], "GET"))
+            free(request.u.args);
+        else if (!strcmp(request.url[0], "POST"))
+            free(request.u.entity_body);
+
+        //TODO: set up a timer
+        return http_serve(fd, addr);
+    } else {
+        free(head.lines);
+        if (!strcmp(request.url[0], "GET"))
+            free(request.u.args);
+        else if (!strcmp(request.url[0], "POST"))
+            free(request.u.entity_body);
+
+        return ret;
+    }
 }
 
 int add(int fd) {
