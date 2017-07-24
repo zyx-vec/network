@@ -1,31 +1,20 @@
 CC = gcc
+CFLAGS = -g -O2 # -std=c99
 
 all : server client
 
 server : server.o io.o common.o parse.o dsignal.o
-	$(CC) -o server server.o io.o common.o parse.o dsignal.o -g# -lrt -pthread
+	$(CC) $(CFLAGS) -o server server.o io.o common.o parse.o dsignal.o #-lrt# -lrt -pthread
 
 client : client.o io.o dsignal.o
-	$(CC) -o client client.o io.o dsignal.o
+	$(CC) $(CFLAGS) -o client client.o io.o dsignal.o
 
 server.o : server.c
-	$(CC) -c server.c
-
 client.o : client.c
-	$(CC) -c client.c
-
-io.o : io.c
-	$(CC) -c io.c
-
-common.o : common.c
-	$(CC) -c common.c
-
-parse.o : parse.c
-	$(CC) -c parse.c
-
-dsignal.o : dsignal.c
-	$(CC) -c dsignal.c
+io.o : io.c io.h
+common.o : common.c common.h
+parse.o : parse.c parse.h
+dsignal.o : dsignal.c dsignal.h
 
 clean :
-	rm *.exe
-	rm *.o
+	rm -f *.exe *.o

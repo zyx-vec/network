@@ -18,7 +18,8 @@ static void print_http_request(struct request_t* request) {
     }
     if (!strcmp(request->url[0], "GET")) {
         struct arg_t* args = request->u.args;
-        for (int i = 0; i < request->size; i++) {
+        int i;
+        for (i = 0; i < request->size; i++) {
             fprintf(stdout, "key: %s, value: %s\n", args[i].key, args[i].value);
         }
     } else if (!strcmp(request->url[0], "POST")) {
@@ -101,7 +102,8 @@ ssize_t parse_http_request(char* buff, struct request_t* request) {
 
     char* request_line = buff;
     char* args;
-    for (int i = 0; i < 2; i++) {
+    int i;
+    for (i = 0; i < 2; i++) {
         char* tmp = strchr(request_line, ' ');
         if (tmp == NULL)
             return -1;
@@ -191,7 +193,8 @@ ssize_t parse_http_is_keep_alive(struct request_t* request) {
     const char CONNECTION[] = "Connection:";
     int size = sizeof(CONNECTION)-1;
 
-    for (int i = 0; i < num; i++) {
+    int i;
+    for (i = 0; i < num; i++) {
         if (!strncmp(lines[i], CONNECTION, size)) {
             char* p = lines[i] + size;
             while (*p == ' ')

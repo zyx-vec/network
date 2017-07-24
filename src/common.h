@@ -10,6 +10,9 @@
 #define BACKLOG 13
 #define ECHO_SERVER_PORT 5678
 
+#define MAX_EVENTS 10
+#define FREQ_TIME 13
+
 #define MAXLINE 256
 #define MAXHEAD (8*KiB)
 #define MAXENTITYBODY (2*MiB)

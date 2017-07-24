@@ -9,6 +9,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
+#include <sys/epoll.h>
+#include <sys/timerfd.h>
+#include <sys/time.h>
+#include <time.h>
+
 #include <semaphore.h>
 
 #include <sys/stat.h>
@@ -83,7 +88,11 @@ int write_log(struct sockaddr_in* addr) {
     ptr = strcat(ptr, port_s);
     printf("log: %s\n", ptr);
 
-    write(fd, ptr, strlen(ptr));    // One system is atomic, use two seperate write here could cause race condition
+    // One system is atomic, use two seperate write here could cause race condition
+    if (write(fd, ptr, strlen(ptr)) == -1) {
+        DEBUG("log error, write");
+        return -1;
+    }
     // write(fd, "\r\n", 2);
 
     // sem_post(sem_id);
@@ -131,7 +140,8 @@ int http_post(int fd, struct request_t* request) {
 }
 
 int http_get(int fd, struct request_t* request) {
-    int ret = 0, response_length, suffix_length=0;
+    int ret = 0;
+    size_t response_length, suffix_length=0;
     char* type;
     char* response = content;
     response_length = strlen(content);
@@ -150,7 +160,6 @@ int http_get(int fd, struct request_t* request) {
     char filesize[7];   // attacker!
     if((file = open(filename, O_RDONLY)) >= 0 && ((fstat(file, &filestat)) >= 0)) {
         response_length = filestat.st_size;
-        printf("file size: %d\n", response_length);
         sprintf(filesize, "%zd\r\n", response_length);
         response = (char*)malloc(MAXHEAD);
         response[0] = '\0';
@@ -197,6 +206,51 @@ int http_serve(int fd, struct sockaddr_in* addr) {
     const char* ptr;  // make ptr point to response content
     int num_of_line = 0;
 
+    // set up timer fd
+    int tfd;
+    struct itimerspec timer = {
+        .it_interval = {0, 0},
+        .it_value = {FREQ_TIME, 0},   // 13 second
+    };
+    tfd = timerfd_create(CLOCK_MONOTONIC, 0);
+    timerfd_settime(tfd, 0, &timer, NULL);
+
+    struct epoll_event ev, events[MAX_EVENTS];
+    int epollfd;
+    ssize_t nr_events;
+    if ((epollfd = epoll_create1(0)) == -1) {
+        DEBUG("epoll_create1");
+        return -1;
+    }
+
+    // add timer fd to epoll
+    ev.events = EPOLLIN;
+    ev.data.fd = tfd;
+    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, tfd, &ev) == -1) {
+        DEBUG("epoll_ctl add timer fd");
+        return -1;
+    }
+
+    ev.events = EPOLLIN;
+    ev.data.fd = fd;
+    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
+        DEBUG("epoll_ctl: fd");
+        return -1;
+    }
+
+    nr_events = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+    int i;
+    for (i = 0; i < nr_events; i++) {
+        if (events[i].data.fd == tfd) {
+            close(fd);  // close the connection
+            close(epollfd);
+            close(tfd);
+            return 1;
+        } else if (events[i].data.fd == fd) {
+            break;
+        }
+    }
+
     n = get_http_request(fd, buff, MAXLINE, &num_of_line);
     if (n < 2 || (write_log(addr) < 0)) {
         if (n == E_URI_OUTRANGE) {
@@ -234,6 +288,8 @@ int http_serve(int fd, struct sockaddr_in* addr) {
         }
     }
 
+    close(epollfd);
+    close(tfd);
 
     if (parse_http_is_keep_alive(&request)) {
         printf("********Keep-alive********\n");
@@ -243,7 +299,6 @@ int http_serve(int fd, struct sockaddr_in* addr) {
         else if (!strcmp(request.url[0], "POST"))
             free(request.u.entity_body);
 
-        //TODO: set up a timer
         return http_serve(fd, addr);
     } else {
         free(head.lines);
@@ -333,7 +388,7 @@ int main() {
         if((fork()) == 0) {
             close(listenfd);
 
-            if((http_serve(connfd, &client)) != 0) {
+            if((http_serve(connfd, &client)) < 0) {
             //if((add(connfd)) != 0) {
                 DEBUG("http_serve");
                 exit(1);
