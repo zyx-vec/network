@@ -64,4 +64,10 @@ struct arg_t {
     char* value;
 };
 
+
+struct pack_t {
+    int fd;
+    struct sockaddr_in* client;
+};
+
 #endif
