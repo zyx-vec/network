@@ -14,6 +14,8 @@
 #include <sys/time.h>
 #include <time.h>
 
+#include <pthread.h>
+
 #include <semaphore.h>
 
 #include <sys/stat.h>
@@ -341,11 +343,25 @@ int add(int fd) {
     return 0;
 }
 
+
+void* serve(void* arg) {
+    struct pack_t* p = (struct pack_t*)arg;
+    
+    if (http_serve(p->fd, p->client) < 0) {
+        DEBUG("http_serve");
+        int ret = -1;
+        pthread_exit(&ret);
+    }
+
+    close(p->fd);
+    free(p->client);
+    free(p);
+}
+
 int main() {
     int listenfd, connfd, count = 0;
 
-    struct sockaddr_in server, client;
-    int len = sizeof(client);
+    struct sockaddr_in server;
 
     if((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {        // socket
         DEBUG("socket");
@@ -372,10 +388,11 @@ int main() {
     Signal(SIGCHLD, sig_chld);
     
     for(;;) {
-        len = sizeof(client);
+        struct sockaddr_in* client = (struct sockaddr_in*)malloc(sizeof(struct sockaddr_in));
+        int len = sizeof(client);
         // connfd = accept(listenfd, (SA*)&client, &len);        	// accept
         count += 1;
-        if((connfd = accept(listenfd, (SA*)&client, &len)) < 0) {
+        if((connfd = accept(listenfd, (SA*)client, &len)) < 0) {
             if(errno == EINTR) {
                 continue;
             } else {
@@ -384,21 +401,14 @@ int main() {
             }
         }
 
-        // 1344415204
-        if((fork()) == 0) {
-            close(listenfd);
+        // free this parameter in the thread that handle for this request
+        struct pack_t* pack = (struct pack_t*)malloc(sizeof(struct pack_t));
+        pack->fd = connfd;
+        pack->client = client;
 
-            if((http_serve(connfd, &client)) < 0) {
-            //if((add(connfd)) != 0) {
-                DEBUG("http_serve");
-                exit(1);
-            }
+        pthread_t pid;
+        pthread_create(&pid, NULL, &serve, (void*)pack);
 
-            fprintf(stderr, "%s\n", "client closed");
-            close(connfd);
-            exit(0);
-        }
-        close(connfd);
         printf("TOTAL number of request: %d\n", count);
     }
 
