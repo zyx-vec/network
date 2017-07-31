@@ -1,0 +1,271 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ADDR_CONVERTER_H_	.\draft\addr_converter.h	3;"	d
+ALIGNMENT	.\src\log\config.h	14;"	d
+ALIGNMENT	.\src\log\mm.h	14;"	d
+ALIGN_SIZE	.\src\log\mm.h	76;"	d
+ALLOC	.\src\log\mm.h	26;"	d
+BACKLOG	.\draft\common.h	10;"	d
+BACKLOG	.\src\common.h	14;"	d
+BACK_LOG	.\draft\daytime_server.c	14;"	d	file:
+BLKSIZE	.\src\log\mm.h	15;"	d
+BROS	.\src\log\mm.h	36;"	d
+BUFFSIZE	.\draft\daytime_server.c	12;"	d	file:
+BUFFSIZE	.\draft\pselect.c	8;"	d	file:
+CHUNKSIZE	.\src\log\mm.h	16;"	d
+COMMON_H_	.\draft\common.h	3;"	d
+COMMON_H_	.\src\common.h	3;"	d
+DEBUG	.\draft\common.h	30;"	d
+DEBUG	.\src\common.h	38;"	d
+D_SIGNAL_H_	.\draft\dsignal.h	3;"	d
+D_SIGNAL_H_	.\src\dsignal.h	3;"	d
+Disassembly	.\draft\asm.s	/^Disassembly of section .text:$/;"	l
+ECHO_SERVER_PORT	.\draft\common.h	11;"	d
+ECHO_SERVER_PORT	.\src\common.h	15;"	d
+EXPECT_BASE	.\draft\test.c	18;"	d	file:
+EXPECT_EQ_INT	.\draft\test.c	28;"	d	file:
+EXPECT_EQ_STRING	.\draft\test.c	29;"	d	file:
+E_NOT_FOUND	.\src\common.h	29;"	d
+E_URI_OUTRANGE	.\draft\common.h	22;"	d
+E_URI_OUTRANGE	.\src\common.h	30;"	d
+FOOT	.\src\log\mm.h	37;"	d
+FREQ_TIME	.\src\common.h	18;"	d
+GET	.\src\log\mm.h	22;"	d
+GET_ALLOC	.\src\log\mm.h	60;"	d
+GET_BROS	.\src\log\mm.h	64;"	d
+GET_FOOT	.\src\log\mm.h	65;"	d
+GET_LEFT	.\src\log\mm.h	61;"	d
+GET_NEXT	.\src\log\mm.h	59;"	d
+GET_PREV	.\src\log\mm.h	58;"	d
+GET_PRNT	.\src\log\mm.h	63;"	d
+GET_RIGHT	.\src\log\mm.h	62;"	d
+GET_SIZE	.\src\log\mm.h	57;"	d
+HEAD	.\src\log\mm.h	32;"	d
+HTML	.\draft\common.h	19;"	d
+HTML	.\src\common.h	26;"	d
+INISIZE	.\src\log\mm.h	17;"	d
+INSERT_NEXT_BLOCK	.\src\log\mm.c	21;"	d	file:
+IO_H_	.\draft\io.h	3;"	d
+IO_H_	.\src\io.h	3;"	d
+IS_DIGIT	.\draft\addr_converter.c	8;"	d	file:
+Inet_ntop	.\draft\addr_converter.c	/^char* Inet_ntop(const struct sockaddr* sa, socklen_t salen) {$/;"	f
+Inet_pton	.\draft\addr_converter.c	/^int Inet_pton(const char* str, void* addr) {$/;"	f
+KiB	.\draft\common.h	7;"	d
+KiB	.\src\common.h	11;"	d
+LEFT	.\src\log\mm.h	33;"	d
+LOG_PATH	.\draft\echo_server.c	29;"	d	file:
+LOG_PATH	.\src\common.h	7;"	d
+MAX	.\src\log\mm.h	19;"	d
+MAXENTITYBODY	.\draft\common.h	15;"	d
+MAXENTITYBODY	.\src\common.h	22;"	d
+MAXHEAD	.\draft\common.h	14;"	d
+MAXHEAD	.\src\common.h	21;"	d
+MAXLINE	.\draft\common.h	13;"	d
+MAXLINE	.\src\common.h	20;"	d
+MAXSIZE	.\draft\test_time.c	6;"	d	file:
+MAX_EVENTS	.\src\common.h	17;"	d
+MAX_HEAP	.\src\log\config.h	19;"	d
+MIN	.\src\log\mm.h	20;"	d
+MiB	.\draft\common.h	8;"	d
+MiB	.\src\common.h	12;"	d
+NEWLINE	.\draft\common.h	17;"	d
+NEWLINE	.\src\common.h	24;"	d
+OVERHEAD	.\src\log\mm.h	13;"	d
+PACK	.\src\log\mm.h	29;"	d
+PRNT	.\src\log\mm.h	35;"	d
+PUT	.\src\log\mm.h	23;"	d
+RIGHT	.\src\log\mm.h	34;"	d
+Read	.\draft\io.c	/^ssize_t Read(int fd, void *ptr, size_t nbytes)$/;"	f
+Read	.\src\io.c	/^ssize_t Read(int fd, void *ptr, size_t nbytes)$/;"	f
+SA	.\draft\common.h	5;"	d
+SA	.\draft\test.c	14;"	d	file:
+SA	.\src\common.h	9;"	d
+SEM_PATH	.\draft\echo_server.c	27;"	d	file:
+SEM_PATH	.\src\common.h	6;"	d
+SET_BROS	.\src\log\mm.h	73;"	d
+SET_FOOT	.\src\log\mm.h	69;"	d
+SET_HEAD	.\src\log\mm.h	68;"	d
+SET_LEFT	.\src\log\mm.h	70;"	d
+SET_PRNT	.\src\log\mm.h	72;"	d
+SET_RIGHT	.\src\log\mm.h	71;"	d
+SIZE	.\src\log\mm.h	25;"	d
+SOCKADDR_IN	.\draft\sock_ops.h	7;"	d
+SOCKADDR_IN6	.\draft\sock_ops.h	8;"	d
+SOCK_OPS_H_	.\draft\sock_ops.h	3;"	d
+Signal	.\draft\dsignal.c	/^sigfunc* Signal(int signo, sigfunc* func) {$/;"	f
+Signal	.\src\dsignal.c	/^sigfunc* Signal(int signo, sigfunc* func) {$/;"	f
+URI_OUTRANGE_RESPONSE	.\draft\common.h	34;"	d
+URI_OUTRANGE_RESPONSE	.\src\common.h	42;"	d
+UTIL_WEIGHT	.\src\log\config.h	9;"	d
+WSIZE	.\src\log\mm.h	12;"	d
+Write	.\draft\io.c	/^void Write(int fd, void *ptr, size_t nbytes)$/;"	f
+Write	.\src\io.c	/^void Write(int fd, void *ptr, size_t nbytes)$/;"	f
+_LOG_H	.\src\log.h	2;"	d
+_MM_H	.\src\log\mm.h	2;"	d
+_PARSE_H	.\draft\parse.h	2;"	d
+_PARSE_H	.\src\parse.h	2;"	d
+__CONFIG_H_	.\src\log\config.h	2;"	d
+a1	.\draft\asm.s	/^  a1:	8b 4d 10             	mov    0x10(%rbp),%ecx$/;"	l
+a4	.\draft\asm.s	/^  a4:	e8 00 00 00 00       	callq  a9 <writen+0x3b>$/;"	l
+a9	.\draft\asm.s	/^  a9:	48 89 45 e8          	mov    %rax,-0x18(%rbp)$/;"	l
+ad	.\draft\asm.s	/^  ad:	48 83 7d e8 00       	cmpq   $0x0,-0x18(%rbp)$/;"	l
+add	.\draft\echo_server.c	/^int add(int fd) {$/;"	f
+add	.\src\server.c	/^int add(int fd) {$/;"	f
+arg_t	.\src\common.h	/^struct arg_t {$/;"	s
+args	.\src\common.h	/^        struct arg_t* args;$/;"	m	union:request_t::__anon1	typeref:struct:request_t::__anon1::arg_t
+b	.\draft\asm.s	/^   b:	48 89 55 18          	mov    %rdx,0x18(%rbp)$/;"	l
+b2	.\draft\asm.s	/^  b2:	75 09                	jne    bd <writen+0x4f>$/;"	l
+b4	.\draft\asm.s	/^  b4:	48 c7 c0 ff ff ff ff 	mov    $0xffffffffffffffff,%rax$/;"	l
+bb	.\draft\asm.s	/^  bb:	eb 1b                	jmp    d8 <writen+0x6a>$/;"	l
+bd	.\draft\asm.s	/^  bd:	48 8b 45 e8          	mov    -0x18(%rbp),%rax$/;"	l
+c1	.\draft\asm.s	/^  c1:	48 29 45 f0          	sub    %rax,-0x10(%rbp)$/;"	l
+c5	.\draft\asm.s	/^  c5:	48 8b 45 e8          	mov    -0x18(%rbp),%rax$/;"	l
+c9	.\draft\asm.s	/^  c9:	48 01 45 f8          	add    %rax,-0x8(%rbp)$/;"	l
+cd	.\draft\asm.s	/^  cd:	48 83 7d f0 00       	cmpq   $0x0,-0x10(%rbp)$/;"	l
+client	.\src\common.h	/^    struct sockaddr_in* client;$/;"	m	struct:pack_t	typeref:struct:pack_t::sockaddr_in
+client_info	.\draft\daytime_server.c	/^void client_info(struct sockaddr_in* client, int size) {$/;"	f
+coalesce	.\src\log\mm.c	/^static void* coalesce(void* bp) {$/;"	f	file:
+content	.\draft\echo_server.c	/^char* content = "HTTP\/1.0 200 OK\\r\\n\\$/;"	v
+content	.\src\server.c	/^char* content = "HTTP\/1.0 200 OK\\r\\n\\$/;"	v
+d2	.\draft\asm.s	/^  d2:	75 bf                	jne    93 <writen+0x25>$/;"	l
+d4	.\draft\asm.s	/^  d4:	48 8b 45 20          	mov    0x20(%rbp),%rax$/;"	l
+d8	.\draft\asm.s	/^  d8:	48 83 c4 40          	add    $0x40,%rsp$/;"	l
+dc	.\draft\asm.s	/^  dc:	5d                   	pop    %rbp$/;"	l
+dd	.\draft\asm.s	/^  dd:	c3                   	retq   $/;"	l
+de	.\draft\asm.s	/^  de:	55                   	push   %rbp$/;"	l
+delete_free_blk	.\src\log\mm.c	/^static void delete_free_blk(void* bp) {$/;"	f	file:
+df	.\draft\asm.s	/^  df:	48 89 e5             	mov    %rsp,%rbp$/;"	l
+doit	.\draft\echo_client.c	/^void doit(FILE* fp, int fd) {$/;"	f
+doit	.\src\client.c	/^void doit(FILE* fp, int fd) {$/;"	f
+doit_select	.\draft\echo_client.c	/^void doit_select(FILE* fp, int fd) {$/;"	f
+doit_select	.\src\client.c	/^void doit_select(FILE* fp, int fd) {$/;"	f
+e2	.\draft\asm.s	/^  e2:	48 83 ec 40          	sub    $0x40,%rsp$/;"	l
+e6	.\draft\asm.s	/^  e6:	89 4d 10             	mov    %ecx,0x10(%rbp)$/;"	l
+e9	.\draft\asm.s	/^  e9:	48 89 55 18          	mov    %rdx,0x18(%rbp)$/;"	l
+ed	.\draft\asm.s	/^  ed:	44 89 45 20          	mov    %r8d,0x20(%rbp)$/;"	l
+entity_body	.\src\common.h	/^        char* entity_body;$/;"	m	union:request_t::__anon1
+err_sys	.\draft\pselect.c	/^void err_sys(const char *p_error)$/;"	f
+extend_heap	.\src\log\mm.c	/^void* extend_heap(size_t size) {$/;"	f
+f	.\draft\asm.s	/^   f:	4c 89 45 20          	mov    %r8,0x20(%rbp)$/;"	l
+f1	.\draft\asm.s	/^  f1:	48 8b 45 18          	mov    0x18(%rbp),%rax$/;"	l
+f5	.\draft\asm.s	/^  f5:	48 89 45 f0          	mov    %rax,-0x10(%rbp)$/;"	l
+f9	.\draft\asm.s	/^  f9:	48 c7 45 f8 01 00 00 	movq   $0x1,-0x8(%rbp)$/;"	l
+fd	.\src\common.h	/^    int fd;$/;"	m	struct:pack_t
+find_fit	.\src\log\mm.c	/^static void* find_fit(size_t asize) {$/;"	f	file:
+get_http_entity_body	.\draft\io.c	/^ssize_t get_http_entity_body(int fd, void* buff, int nbytes) {$/;"	f
+get_http_entity_body	.\src\io.c	/^ssize_t get_http_entity_body(int fd, void* buff, int nbytes) {$/;"	f
+get_http_request	.\draft\io.c	/^ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {$/;"	f
+get_http_request	.\src\io.c	/^ssize_t get_http_request(int fd, void* buff, int maxline, int* num_of_line) {$/;"	f
+head	.\draft\common.h	/^    struct head_t* head;$/;"	m	struct:request_t	typeref:struct:request_t::head_t
+head	.\src\common.h	/^    struct head_t* head;$/;"	m	struct:request_t	typeref:struct:request_t::head_t
+head_t	.\draft\common.h	/^struct head_t {$/;"	s
+head_t	.\src\common.h	/^struct head_t {$/;"	s
+heap_list_ptr	.\src\log\mm.c	/^static void *heap_list_ptr;$/;"	v	file:
+http_get	.\draft\echo_server.c	/^int http_get(int fd, struct request_t* request) {$/;"	f
+http_get	.\src\server.c	/^int http_get(int fd, struct request_t* request) {$/;"	f
+http_post	.\draft\echo_server.c	/^int http_post(int fd, struct request_t* request) {$/;"	f
+http_post	.\src\server.c	/^int http_post(int fd, struct request_t* request) {$/;"	f
+http_serve	.\draft\echo_server.c	/^int http_serve(int fd, struct sockaddr_in* addr) {$/;"	f
+http_serve	.\src\server.c	/^int http_serve(int fd, struct sockaddr_in* addr) {$/;"	f
+http_str2int	.\draft\common.c	/^int http_str2int(char* p) {$/;"	f
+http_str2int	.\src\common.c	/^int http_str2int(char* p) {$/;"	f
+insert_free_blk	.\src\log\mm.c	/^static void insert_free_blk(void* bp) {$/;"	f	file:
+key	.\src\common.h	/^    char* key;$/;"	m	struct:arg_t
+lines	.\draft\common.h	/^    char** lines;$/;"	m	struct:head_t
+lines	.\src\common.h	/^    char** lines;$/;"	m	struct:head_t
+main	.\draft\client.c	/^int main() {$/;"	f
+main	.\draft\daytime_server.c	/^int main() {$/;"	f
+main	.\draft\echo_client.c	/^int main(int argc, char** argv) {$/;"	f
+main	.\draft\echo_server.c	/^int main() {$/;"	f
+main	.\draft\pselect.c	/^int main(int argc, char **argv) {$/;"	f
+main	.\draft\select_echo_server.c	/^int main() {$/;"	f
+main	.\draft\test.c	/^int main() {$/;"	f
+main	.\draft\test_time.c	/^int main() {$/;"	f
+main	.\src\client.c	/^int main(int argc, char** argv) {$/;"	f
+main	.\src\log\test.c	/^int main(void) {$/;"	f
+main	.\src\server.c	/^int main() {$/;"	f
+max	.\draft\common.h	27;"	d
+max	.\src\common.h	35;"	d
+mem_brk	.\src\log\memlib.c	/^static char* mem_brk;        \/* points to last byte of heap *\/$/;"	v	file:
+mem_deinit	.\src\log\memlib.c	/^void mem_deinit(void) {$/;"	f
+mem_heap_hi	.\src\log\memlib.c	/^void* mem_heap_hi() {$/;"	f
+mem_heap_lo	.\src\log\memlib.c	/^void* mem_heap_lo() {$/;"	f
+mem_heapsize	.\src\log\memlib.c	/^size_t mem_heapsize() {$/;"	f
+mem_init	.\src\log\memlib.c	/^void mem_init(void) {$/;"	f
+mem_max_addr	.\src\log\memlib.c	/^static char* mem_max_addr;   \/* largest legal heap address *\/ $/;"	v	file:
+mem_pagesize	.\src\log\memlib.c	/^size_t mem_pagesize() {$/;"	f
+mem_reset_brk	.\src\log\memlib.c	/^void mem_reset_brk() {$/;"	f
+mem_sbrk	.\src\log\memlib.c	/^void* mem_sbrk(int incr) {$/;"	f
+mem_start_brk	.\src\log\memlib.c	/^static char* mem_start_brk;  \/* points to first byte of heap *\/$/;"	v	file:
+min	.\draft\common.h	28;"	d
+min	.\src\common.h	36;"	d
+mm_free	.\src\log\mm.c	/^void mm_free(void* bp) {$/;"	f
+mm_init	.\src\log\mm.c	/^int mm_init(void) {$/;"	f
+mm_malloc	.\src\log\mm.c	/^void* mm_malloc(size_t size) {$/;"	f
+mm_realloc	.\src\log\mm.c	/^void* mm_realloc(void* ptr, size_t size) {$/;"	f
+num_of_head_lines	.\draft\common.h	/^    int num_of_head_lines;$/;"	m	struct:head_t
+num_of_head_lines	.\src\common.h	/^    int num_of_head_lines;$/;"	m	struct:head_t
+pack_t	.\src\common.h	/^struct pack_t {$/;"	s
+parse_http_add_parameter	.\src\parse.c	/^static ssize_t parse_http_add_parameter(char* begin, struct request_t* request, int n) {$/;"	f	file:
+parse_http_content_length	.\draft\parse.c	/^ssize_t parse_http_content_length(struct request_t* request) {$/;"	f
+parse_http_content_length	.\src\parse.c	/^ssize_t parse_http_content_length(struct request_t* request) {$/;"	f
+parse_http_get_arg_num	.\src\parse.c	/^static ssize_t parse_http_get_arg_num(char* buff) {$/;"	f	file:
+parse_http_get_parameters	.\src\parse.c	/^static ssize_t parse_http_get_parameters(char* buff, struct request_t* request) {$/;"	f	file:
+parse_http_is_keep_alive	.\src\parse.c	/^ssize_t parse_http_is_keep_alive(struct request_t* request) {$/;"	f
+parse_http_request	.\draft\parse.c	/^ssize_t parse_http_request(char* buff, struct request_t* request) {$/;"	f
+parse_http_request	.\src\parse.c	/^ssize_t parse_http_request(char* buff, struct request_t* request) {$/;"	f
+parse_http_request_filename	.\draft\parse.c	/^ssize_t parse_http_request_filename(char* filename, struct request_t* request) {$/;"	f
+parse_http_request_filename	.\src\parse.c	/^ssize_t parse_http_request_filename(char* filename, struct request_t* request) {$/;"	f
+parse_http_split_lines	.\draft\parse.c	/^static ssize_t parse_http_split_lines(char* buff, struct head_t* head) {$/;"	f	file:
+parse_http_split_lines	.\src\parse.c	/^static ssize_t parse_http_split_lines(char* buff, struct head_t* head) {$/;"	f	file:
+parse_http_url_type	.\draft\parse.c	/^char* parse_http_url_type(char* p) {$/;"	f
+parse_http_url_type	.\src\parse.c	/^char* parse_http_url_type(char* p) {$/;"	f
+passed	.\draft\test.c	/^int passed, total;$/;"	v
+place	.\src\log\mm.c	/^static void place(void* bp, size_t asize) {$/;"	f	file:
+print_http_request	.\draft\parse.c	/^static void print_http_request(struct request_t* request) {$/;"	f	file:
+print_http_request	.\src\parse.c	/^static void print_http_request(struct request_t* request) {$/;"	f	file:
+readline	.\draft\io.c	/^ssize_t readline(int fd, void* buff, int maxlen) {$/;"	f
+readline	.\src\io.c	/^ssize_t readline(int fd, void* buff, int maxlen) {$/;"	f
+readn	.\draft\io.c	/^ssize_t readn(int fd, void* buff, size_t n) {$/;"	f
+readn	.\src\io.c	/^ssize_t readn(int fd, void* buff, size_t n) {$/;"	f
+request_t	.\draft\common.h	/^struct request_t {$/;"	s
+request_t	.\src\common.h	/^struct request_t {$/;"	s
+root	.\src\log\mm.c	/^static void *root;$/;"	v	file:
+send2	.\draft\echo_server.c	/^int send2(int fd, const char* response, int length) {$/;"	f
+send2	.\src\server.c	/^int send2(int fd, const char* response, int length) {$/;"	f
+send_response	.\draft\echo_server.c	/^int send_response(int fd, struct request_t* request) {$/;"	f
+send_response	.\src\server.c	/^int send_response(int fd, struct request_t* request) {$/;"	f
+serve	.\src\server.c	/^void* serve(void* arg) {$/;"	f
+short2str	.\src\common.c	/^int short2str(short n, char* p) {$/;"	f
+sig_alrm	.\draft\pselect.c	/^void sig_alrm(int signo)$/;"	f
+sig_chld	.\draft\echo_server.c	/^void sig_chld(int signo) {$/;"	f
+sig_chld	.\src\server.c	/^void sig_chld(int signo) {$/;"	f
+sig_pipe	.\draft\echo_client.c	/^void sig_pipe(int signo) {$/;"	f
+sig_pipe	.\src\client.c	/^void sig_pipe(int signo) {$/;"	f
+sigfunc	.\draft\common.h	/^typedef void sigfunc(int);$/;"	t
+sigfunc	.\src\common.h	/^typedef void sigfunc(int);$/;"	t
+sigsegv	.\src\log\test.c	/^static void sigsegv(int signum, siginfo_t* si, void* unused) {$/;"	f	file:
+size	.\src\common.h	/^    int size;$/;"	m	struct:request_t
+sock_bind_wild	.\draft\sock_ops.c	/^int sock_bind_wild(int sockfd, int family) {$/;"	f
+sock_cmp_addr	.\draft\sock_ops.c	/^int sock_cmp_addr(const struct sockaddr* sa1,$/;"	f
+sock_cmp_port	.\draft\sock_ops.c	/^int sock_cmp_port(const struct sockaddr* sa1,$/;"	f
+sock_ntop_host	.\draft\sock_ops.c	/^char* sock_ntop_host(const struct sockaddr* sa, socklen_t addrlen) {$/;"	f
+sock_set_addr	.\draft\sock_ops.c	/^void sock_set_addr(const struct sockaddr* sa, socklen_t addrlen, void* ptr) {$/;"	f
+sock_set_port	.\draft\sock_ops.c	/^void sock_set_port(const struct sockaddr* sa, socklen_t addrlen, int* port) {$/;"	f
+sock_set_wild	.\draft\sock_ops.c	/^int sock_set_wild(struct sockaddr* sa, socklen_t addrlen) {$/;"	f
+test	.\draft\test.c	/^void test() {$/;"	f
+test_addr_converter	.\draft\test.c	/^void test_addr_converter() {$/;"	f
+test_sock_ops	.\draft\test.c	/^void test_sock_ops() {$/;"	f
+total	.\draft\test.c	/^int passed, total;$/;"	v
+u	.\src\common.h	/^    } u;$/;"	m	struct:request_t	typeref:union:request_t::__anon1
+url	.\draft\common.h	/^    char* url[3];$/;"	m	struct:request_t
+url	.\src\common.h	/^    char* url[3];$/;"	m	struct:request_t
+value	.\src\common.h	/^    char* value;$/;"	m	struct:arg_t
+write_log	.\draft\echo_server.c	/^int write_log(struct sockaddr_in* addr) {$/;"	f
+write_log	.\src\log.c	/^int write_log(struct sockaddr_in* addr) {$/;"	f
+writen	.\draft\io.c	/^ssize_t writen(int fd, const void* buff, size_t n) {$/;"	f
+writen	.\src\io.c	/^ssize_t writen(int fd, const void* buff, size_t n) {$/;"	f

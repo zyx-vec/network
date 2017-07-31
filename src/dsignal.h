@@ -1,6 +1,6 @@
-#ifndef D_SIGNAL_H_
+#ifndef __D_SIGNAL_H
 
-#define D_SIGNAL_H_
+#define __D_SIGNAL_H
 
 #include "common.h"
 

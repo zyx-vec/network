@@ -1,6 +1,10 @@
-#ifndef COMMON_H_
+#ifndef __COMMON_H
 
-#define COMMON_H_
+#define __COMMON_H
+
+// logging
+#define SEM_PATH "./log/sem_http_log"
+#define LOG_PATH "./log/log.txt" 
 
 #define SA struct sockaddr
 

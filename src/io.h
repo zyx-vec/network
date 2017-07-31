@@ -1,6 +1,6 @@
-#ifndef IO_H_
+#ifndef __IO_H
 
-#define IO_H_
+#define __IO_H
 
 ssize_t readn(int fd, void* buff, size_t n);
 

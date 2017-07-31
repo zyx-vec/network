@@ -22,18 +22,15 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-#include <time.h>
 #include <assert.h>
 
 #include "common.h"
 #include "io.h"
 #include "dsignal.h"
 #include "parse.h"
+#include "log.h"
 
 
-#define SEM_PATH "./log/sem_http_log"
-
-#define LOG_PATH "./log/log.txt" 
 
 char* content = "HTTP/1.0 200 OK\r\n\
 Content-type: text/plain\r\n\
@@ -63,46 +60,6 @@ void sig_chld(int signo) {
     // it, when it happends. see below calls to accept().
 }
 
-int write_log(struct sockaddr_in* addr) {
-    time_t cur_time;
-    char log_buff[512];
-    char* ptr = log_buff;
-    struct tm* cur_tm;
-    memset(log_buff, 0, sizeof(log_buff));
-    char* ip = inet_ntoa(addr->sin_addr);
-    short port = ntohs(addr->sin_port);
-    
-    // sem_t* sem_id = sem_open(SEM_PATH, O_CREAT, S_IRUSR | S_IWUSR, 1);
-    // sem_wait(sem_id);
-
-    // must specify the third parameter: mode, because O_CREAT is here.
-    int fd = open(LOG_PATH, O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IWUSR);
-    if (fd == -1) {
-        DEBUG("open");
-        return -1;
-    }
-    cur_time = time(NULL);
-    cur_tm = localtime(&cur_time);
-    strftime(log_buff, sizeof(log_buff)-1, "%F %T, client's ip: ", cur_tm);
-    ptr = strcat(ptr, ip);
-    char port_s[9];
-    snprintf(port_s, sizeof(port_s), ":%d\r\n", port);
-    ptr = strcat(ptr, port_s);
-    printf("log: %s\n", ptr);
-
-    // One system is atomic, use two seperate write here could cause race condition
-    if (write(fd, ptr, strlen(ptr)) == -1) {
-        DEBUG("log error, write");
-        return -1;
-    }
-    // write(fd, "\r\n", 2);
-
-    // sem_post(sem_id);
-    // sem_close(sem_id);
-    // sem_unlink(SEM_PATH);
-    close(fd);
-    return 0;
-}
 
 int send2(int fd, const char* response, int length) {
     if((writen(fd, response, length)) < 0) {
@@ -254,13 +211,15 @@ int http_serve(int fd, struct sockaddr_in* addr) {
     }
 
     n = get_http_request(fd, buff, MAXLINE, &num_of_line);
-    if (n < 2 || (write_log(addr) < 0)) {
+    int tmp;
+    if (n < 2 || ((tmp = write_log(addr)) < 0)) {
         if (n == E_URI_OUTRANGE) {
             response_length = strlen(URI_OUTRANGE_RESPONSE);
             ptr = URI_OUTRANGE_RESPONSE;
             send2(fd, ptr, response_length);
-        }
-        else {
+        } else {    // client close
+            close(epollfd);
+            close(tfd);
             return -1;
         }
     }
@@ -350,7 +309,10 @@ void* serve(void* arg) {
     if (http_serve(p->fd, p->client) < 0) {
         DEBUG("http_serve");
         int ret = -1;
-        pthread_exit(&ret);
+        close(p->fd);
+        free(p->client);
+        free(p);
+        pthread_exit(&ret); // deamon thread
     }
 
     close(p->fd);
@@ -406,12 +368,11 @@ int main() {
         pack->fd = connfd;
         pack->client = client;
 
-        pthread_t pid;
-        pthread_create(&pid, NULL, &serve, (void*)pack);
+        pthread_t tid;
+        pthread_create(&tid, NULL, &serve, (void*)pack);
 
         printf("TOTAL number of request: %d\n", count);
     }
-
 
     return 0;
 }
