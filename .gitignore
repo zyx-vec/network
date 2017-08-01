@@ -11,3 +11,5 @@ log/
 *.png  
 client  
 server  
+json  
+thread  
